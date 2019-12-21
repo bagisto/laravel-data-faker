@@ -1,0 +1,27 @@
+{
+    "name": "bagisto/laravel-datafaker",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Naresh Verma",
+            "email": "naresh.verma327@webkul.com"
+        }
+    ],
+    "require": {
+        "konekt/concord": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webkul\\DataFaker\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\DatFaker\\Providers\\DataFakerServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}
