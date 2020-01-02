@@ -2,11 +2,12 @@
 
 use Faker\Generator as Faker;
 
+use Webkul\Product\Models\Product;
 use Webkul\Product\Models\ProductAttributeValue;
 
 $factory->define(\Webkul\Product\Models\ProductFlat::Class, function (Faker $faker, $data) {
 
-    $products = $data['product_id'];
+    $products = Product::find($data['product_id'])->first();
 
     if ($products->type == 'simple') {
 

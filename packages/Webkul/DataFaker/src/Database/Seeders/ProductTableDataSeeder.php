@@ -37,7 +37,7 @@ class ProductTableDataSeeder extends Seeder
         factory(\Webkul\Product\Models\Product::class, $count)->create()->each(function ($product) {
 
             if ($product->type == 'simple') {
-                $product->product()->save(factory(\Webkul\Product\Models\ProductFlat::class)->make(['product_id' => $product]));
+                $product->product()->save(factory(\Webkul\Product\Models\ProductFlat::class)->make(['product_id' => $product])->toArray());
 
                 $product->product()->save(factory(\Webkul\Product\Models\ProductInventory::class)->make());
             }
