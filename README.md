@@ -16,7 +16,7 @@ It packs some feature:
 
 ### 2. Requirements:
 
-* **Bagisto**: v0.1.6 or higher.
+* **Bagisto**: v1.2.0-BETA1.
 
 ### 3. Installation:
 
@@ -24,7 +24,7 @@ It packs some feature:
 * Goto config/app.php file and add following line under 'providers'
 
 ~~~
-Webkul\DataFaker\Providers\DataFaker::class
+Webkul\DataFaker\Providers\DataFakerServiceProvider::class
 ~~~
 
 * Goto composer.json file and add following line under 'psr-4'

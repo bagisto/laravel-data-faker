@@ -5,6 +5,7 @@ namespace Webkul\DataFaker\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Webkul\Attribute\Repositories\AttributeRepository;
 use DB;
+use Faker\Generator as Faker;
 
 class ProductTableDataSeeder extends Seeder
 {
@@ -27,19 +28,25 @@ class ProductTableDataSeeder extends Seeder
 
     public function run()
     {
-        $count = 20;
+        $count = 10;
         DB::table('products')->delete();
         DB::table('product_flat')->delete();
         DB::table('product_inventories')->delete();
         DB::table('product_images')->delete();
         DB::table('product_attribute_values')->delete();
 
+
         factory(\Webkul\Product\Models\Product::class, $count)->create()->each(function ($product) {
+            $faker = \Faker\Factory::create();
+
+            $productType = $faker->randomElement(['simple' , 'configurable']);
+
+            $product->update(['type' => $productType]);
 
             if ($product->type == 'simple') {
-                $product->product()->save(factory(\Webkul\Product\Models\ProductFlat::class)->make(['product_id' => $product]));
+                factory(\Webkul\Product\Models\ProductFlat::class)->create(['product_id' => $product]);
 
-                $product->product()->save(factory(\Webkul\Product\Models\ProductInventory::class)->make());
+                factory(\Webkul\Product\Models\ProductInventory::class)->create(['product_id' => $product->id, 'inventory_source_id' => 1]);
             }
 
             if ($product->type == 'configurable') {

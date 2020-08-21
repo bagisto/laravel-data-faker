@@ -10,24 +10,29 @@ class ProductCategoryTableDataSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('categories')->delete();
+        DB::table('categories')
+        ->where('categories.id' ,'<>' ,1)
+        ->delete();
+
+        DB::table('categories')
+        ->where('categories.id', 1)
+        ->update(['_rgt' => '26']);
 
         $now = Carbon::now();
 
         DB::table('categories')->insert([
-            ['id' => '1','position' => '1','image' => NULL,'status' => '1','_lft' => '1','_rgt' => '26','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '2','position' => '2','image' => NULL,'status' => '1','_lft' => '14','_rgt' => '15','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '2','position' => '1','image' => NULL,'status' => '1','_lft' => '14','_rgt' => '15','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '3','position' => '3','image' => NULL,'status' => '1','_lft' => '16','_rgt' => '17','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '3','position' => '3','image' => NULL,'status' => '1','_lft' => '16','_rgt' => '17','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '4','position' => '4','image' => NULL,'status' => '1','_lft' => '18','_rgt' => '19','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '4','position' => '4','image' => NULL,'status' => '1','_lft' => '18','_rgt' => '19','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '5','position' => '5','image' => NULL,'status' => '1','_lft' => '20','_rgt' => '21','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '5','position' => '5','image' => NULL,'status' => '1','_lft' => '20','_rgt' => '21','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '6','position' => '6','image' => NULL,'status' => '1','_lft' => '22','_rgt' => '23','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '6','position' => '6','image' => NULL,'status' => '1','_lft' => '22','_rgt' => '23','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
-            ['id' => '7','position' => '7','image' => NULL,'status' => '1','_lft' => '24','_rgt' => '25','parent_id' => NULL, 'created_at' => $now, 'updated_at' => $now],
+            ['id' => '7','position' => '7','image' => NULL,'status' => '1','_lft' => '24','_rgt' => '25','parent_id' => 1, 'created_at' => $now, 'updated_at' => $now],
 
         ]);
 

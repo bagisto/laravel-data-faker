@@ -63,7 +63,7 @@ class CustomerAddressRepository
             'postcode' => $faker->postcode,
             'phone' => $faker->phoneNumber,
             'default_address' => $default_address,
-            'name' => $faker->name,
+            'address_type' => 'customer'
         ];
     }
 }

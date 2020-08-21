@@ -11,7 +11,9 @@ $factory->define(\Webkul\Product\Models\ProductFlat::Class, function (Faker $fak
     if ($products->type == 'simple') {
 
         $product = ['product_id' => $products->id];
-        $fakeData = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->GetProductFlatDummyData($faker);
+
+        $fakeData = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->GetProductFlatDummyData($faker, $products->type);
+
         $attributes = app('Webkul\Attribute\Repositories\AttributeRepository')->get();
 
         foreach ($attributes as $attribute) {
@@ -46,8 +48,6 @@ $factory->define(\Webkul\Product\Models\ProductFlat::Class, function (Faker $fak
 
             factory(\Webkul\Product\Models\ProductAttributeValue::class)->create($attributeValue);
         }
-
-
 
         $fakeImage = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->uploadImages($faker, $product);
 

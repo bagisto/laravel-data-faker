@@ -9,9 +9,9 @@ class CustomerAddressTableDataSeeder extends Seeder
 {
     public function run()
     {
-        $count = 100;
+        $count = 10;
         DB::table('customers')->delete();
-        DB::table('customer_addresses')->delete();
+        DB::table('addresses')->where('address_type', 'customer')->delete();
 
         $data = factory(\Webkul\Customer\Models\CustomerAddress::class, $count)->create();
     }

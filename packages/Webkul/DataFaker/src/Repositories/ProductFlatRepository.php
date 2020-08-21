@@ -152,16 +152,14 @@ class ProductFlatRepository extends Repository
         return 'Webkul\Product\Contracts\Product';
     }
 
-    // /**
-    //  * Create Product Dummy Data.
-    //  *
-    //  * @param $faker
-    //  * @return mixed
-    //  */
-    public function getProductFlatDummyData($faker)
+    /**
+     * Create Product Dummy Data.
+     *
+     * @param $faker
+     * @return mixed
+     */
+    public function getProductFlatDummyData($faker, $productType)
     {
-        $productType = $faker->randomElement(['simple']);
-
         switch( $productType ) {
             case 'simple':
                 $fakeData = $this->getSimpleProductDummyData($faker ,$productType);
@@ -283,8 +281,8 @@ class ProductFlatRepository extends Repository
                 'size' => [
                     0 => 6,
                     1 => 7,
-                    2 => 8,
-                    3 => 9
+                    // 2 => 8,
+                    // 3 => 9
                 ]
             ],
             'family' => 1
