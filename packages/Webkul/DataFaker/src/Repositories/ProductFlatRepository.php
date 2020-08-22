@@ -182,7 +182,7 @@ class ProductFlatRepository extends Repository
 
         $sku = substr(strtolower(str_replace(array('a','e','i','o','u'), '', $productName)), 0, 6);
 
-        $productSku = str_replace(' ', '', $sku) . "-". str_replace(' ', '', $sku) . "-" . rand(1,9999) . "-" . rand(1,9999);
+        $productSku = str_replace(' ', '', $sku) . "-". str_replace(' ', '', $sku) . "-" . rand(1,9999999) . "-" . rand(1,9999999);
 
         $price = $faker->numberBetween($min = 0, $max = 500);
 
@@ -207,7 +207,7 @@ class ProductFlatRepository extends Repository
         $data = [
             'sku' => $productSku,
             'name' => $productFaker->productName,
-            'url_key' => $faker->unique()->word . '-' . rand(1,9999),
+            'url_key' => $faker->unique(true)->word . '-' . rand(1,9999999),
             'new' => 1,
             'featured' => 1,
             'visible_individually' => 1,
@@ -254,7 +254,7 @@ class ProductFlatRepository extends Repository
 
         $sku = substr(strtolower(str_replace(array('a','e','i','o','u'), '', $productName)), 0, 6);
 
-        $productSku = str_replace(' ', '', $sku) . "-" . rand(100,99999);
+        $productSku = str_replace(' ', '', $sku) . "-" . rand(100,9999999);
 
         $attributeFamily = $this->attributeFamilyRepository->get()->random();
 
@@ -428,7 +428,7 @@ class ProductFlatRepository extends Repository
         if ($product['type'] == 'configurable') {
             $price = null;
             $parentId = null;
-            $urlKey = $faker->unique()->word . '-' . rand(1,99999);
+            $urlKey = $faker->unique(true)->word . '-' . rand(1,9999999);
             $new = 1;
             $feature = 1;
             $description = $faker->paragraph;
