@@ -44,6 +44,10 @@ composer require mbezhanov/faker-provider-collection
 ~~~
 
 ~~~
+composer require laravel/helpers
+~~~
+
+~~~
 php artisan migrate
 ~~~
 
