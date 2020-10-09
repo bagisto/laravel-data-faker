@@ -1,5 +1,9 @@
-### 1. Introduction:
+# Bagisto
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/bagisto-europe/laravel-data-faker/run-tests?label=tests)](https://github.com/bagisto-europe/laravel-data-faker/actions?query=workflow%3Arun-tests+branch%3Amaster)
+[![Total Downloads](https://img.shields.io/packagist/dt/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
 
+### 1. Introduction:
 
 Data Faker module provides fake Data for bagisto.  
 This allows us to generate fake data that can be populated into the database during development for testing purposes.
