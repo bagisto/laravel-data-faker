@@ -1,64 +1,33 @@
+# Bagisto DataFaker
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
+[![Total Downloads](https://img.shields.io/packagist/dt/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
+
 ### 1. Introduction:
 
-Data Faker module provides fake Data for bagisto . This allows us to generate fake data that can be populated into the database during development for testing purposes.
+Data Faker module provides fake Data for bagisto.  
+This allows us to generate fake data that can be populated into the database during development for testing purposes.
 
-By using this, you can generate fake data for the bagisto product and customer and categories.
+By using this extension, you can generate fake data for the bagisto product and customer and categories.
 
 It packs some feature:
 
 * The user can create Product fake data.
-
 * The user can create Users fake data.
-
 * The user can create some Category fake data.
-
 * The user can create Product Category fake data.
 
 ### 2. Requirements:
 
-* **Bagisto**: v1.2.0-BETA1.
+* **Bagisto**: v1.2.0
 
 ### 3. Installation:
 
-* Unzip the respective extension zip and then merge "packages" folders into project root directory.
-* Goto config/app.php file and add following line under 'providers'
+```sh
+composer require bagisto/laravel-datafaker
+```
 
-~~~
-Webkul\DataFaker\Providers\DataFakerServiceProvider::class
-~~~
+* Run the following command below to complete the setup
 
-* Goto composer.json file and add following line under 'psr-4'
-
-~~~
-"Webkul\\DataFaker\\": "packages/Webkul/DataFaker/src"
-~~~
-
-* Run these commands below to complete the setup
-
-~~~
-composer dump-autoload
-~~~
-
-~~~
-composer require mbezhanov/faker-provider-collection
-~~~
-
-~~~
-composer require laravel/helpers
-~~~
-
-~~~
-php artisan migrate
-~~~
-
-~~~
+```sh
 php artisan db:seed --class="Webkul\DataFaker\Database\Seeders\DatabaseSeeder"
-~~~
-
-~~~
-php artisan vendor:publish
-
--> Press 0 and then press enter to publish all assets and configurations.
-~~~
-
-> now execute the project on your specified domain.
+```
