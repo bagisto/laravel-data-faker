@@ -1,0 +1,43 @@
+{
+    "name": "bagisto/laravel-datafaker",
+    "description": "Add fake data of products and customers in Bagisto.",
+    "keywords": [
+        "bagisto",
+        "fake products",
+        "fake customers"
+    ],
+    "homepage": "https://github.com/bagisto/laravel-data-faker",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Naresh Verma",
+            "email": "naresh.verma327@webkul.com",
+            "homepage": "https://bagisto.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "konekt/concord": "^1.2",
+        "laravel/helpers": "^1.3",
+        "mbezhanov/faker-provider-collection": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webkul\\DataFaker\\": "src",
+            "Webkul\\DataFaker\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\DataFaker\\DataFakerServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
