@@ -1,15 +1,10 @@
-# Bagisto DataFaker
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
-[![Total Downloads](https://img.shields.io/packagist/dt/bagisto-europe/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto-europe/laravel-data-faker)
+# Bagisto
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/bagisto/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-data-faker)
+[![Total Downloads](https://img.shields.io/packagist/dt/bagisto/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-data-faker)
 
 ### 1. Introduction:
 
-Data Faker module provides fake Data for bagisto.  
-This allows us to generate fake data that can be populated into the database during development for testing purposes.
-
-By using this extension, you can generate fake data for the bagisto product and customer and categories.
-
-It packs some feature:
+This module allows you to generate fake data that can be populated into the database during development for testing purposes.  
 
 * The user can create Product fake data.
 * The user can create Users fake data.
