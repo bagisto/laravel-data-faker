@@ -33,7 +33,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Webkul\\DataFaker\\DataFakerServiceProvider"
+                "Webkul\\DataFaker\\Providers\\DataFakerServiceProvider"
             ],
             "aliases": {}
         }
