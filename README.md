@@ -1,6 +1,5 @@
 # Bagisto
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/bagisto/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-data-faker)
-[![Total Downloads](https://img.shields.io/packagist/dt/bagisto/laravel-data-faker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-data-faker)
+[![Total Downloads](https://img.shields.io/packagist/dt/bagisto/laravel-datafaker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-datafaker)
 
 ### 1. Introduction:
 
