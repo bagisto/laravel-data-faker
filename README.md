@@ -3,7 +3,7 @@
 
 ### 1. Introduction:
 
-This module allows you to generate fake data that can be populated into the database during development for testing purposes.  
+This module allows you to generate fake data that can be populated into the database during development for testing purposes.
 
 * The user can create Product fake data.
 * The user can create Users fake data.
@@ -17,7 +17,7 @@ This module allows you to generate fake data that can be populated into the data
 ### 3. Installation:
 
 ```sh
-composer require bagisto/laravel-datafaker
+composer require robinflyhigh/bagisto-laravel-data-faker
 ```
 
 * Run the following command below to complete the setup
