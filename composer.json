@@ -1,5 +1,5 @@
 {
-    "name": "bagisto/laravel-datafaker",
+    "name": "robinflyhigh/bagisto-laravel-data-faker",
     "description": "Add fake data of products and customers in Bagisto.",
     "keywords": [
         "bagisto",
