@@ -19,7 +19,7 @@
     "require": {
         "konekt/concord": "^1.2",
         "laravel/helpers": "^1.3",
-        "mbezhanov/faker-provider-collection": "^1.2"
+        "mbezhanov/faker-provider-collection": "^2.0"
     },
     "autoload": {
         "psr-4": {
