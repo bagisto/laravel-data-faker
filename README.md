@@ -1,4 +1,4 @@
-# Bagisto
+# Bagisto datafaker
 [![Total Downloads](https://img.shields.io/packagist/dt/bagisto/laravel-datafaker.svg?style=flat-square)](https://packagist.org/packages/bagisto/laravel-datafaker)
 
 ### 1. Introduction:
