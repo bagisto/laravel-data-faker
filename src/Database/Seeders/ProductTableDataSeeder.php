@@ -39,7 +39,7 @@ class ProductTableDataSeeder extends Seeder
         factory(\Webkul\Product\Models\Product::class, $count)->create()->each(function ($product) {
             $faker = \Faker\Factory::create();
 
-            $productType = $faker->randomElement(['simple' , 'configurable']);
+            $productType = $faker->randomElement(['simple', 'configurable']);
 
             $product->update(['type' => $productType]);
 

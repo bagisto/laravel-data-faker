@@ -4,8 +4,7 @@ use Faker\Generator as Faker;
 
 use Webkul\Product\Models\ProductAttributeValue;
 
-$factory->define(\Webkul\Product\Models\ProductFlat::Class, function (Faker $faker, $data) {
-
+$factory->define(\Webkul\Product\Models\ProductFlat::class, function (Faker $faker, $data) {
     $products = $data['product_id'];
 
     if ($products->type == 'simple') {
@@ -19,22 +18,22 @@ $factory->define(\Webkul\Product\Models\ProductFlat::Class, function (Faker $fak
         foreach ($attributes as $attribute) {
 
             if (! isset($fakeData[$attribute->code]) || (in_array($attribute->type, ['date', 'datetime']) && ! $fakeData[$attribute->code]))
-                    continue;
+                continue;
 
-                if ($attribute->type == 'multiselect' || $attribute->type == 'checkbox') {
-                    $fakeData[$attribute->code] = implode(",", $fakeData[$attribute->code]);
+            if ($attribute->type == 'multiselect' || $attribute->type == 'checkbox') {
+                $fakeData[$attribute->code] = implode(",", $fakeData[$attribute->code]);
+            }
+
+            if ($attribute->type == 'image' || $attribute->type == 'file') {
+                $dir = 'product';
+                if (gettype($fakeData[$attribute->code]) == 'object') {
+                    $fakeData[$attribute->code] = request()->file($attribute->code)->store($dir);
+                } else {
+                    $fakeData[$attribute->code] = NULL;
                 }
+            }
 
-                if ($attribute->type == 'image' || $attribute->type == 'file') {
-                    $dir = 'product';
-                    if (gettype($fakeData[$attribute->code]) == 'object') {
-                        $fakeData[$attribute->code] = request()->file($attribute->code)->store($dir);
-                    } else {
-                        $fakeData[$attribute->code] = NULL;
-                    }
-                }
-
-            $attributeValue =[
+            $attributeValue = [
                 'product_id' => $product['product_id'],
                 'attribute_id' => $attribute->id,
                 'value' => $fakeData[$attribute->code],
