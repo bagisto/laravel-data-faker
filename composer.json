@@ -23,8 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Webkul\\DataFaker\\": "src",
-            "Webkul\\DataFaker\\Database\\Factories\\": "database/factories"
+            "Webkul\\DataFaker\\": "src"
         }
     },
     "config": {
