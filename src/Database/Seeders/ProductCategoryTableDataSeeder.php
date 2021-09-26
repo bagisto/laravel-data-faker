@@ -38,16 +38,16 @@ class ProductCategoryTableDataSeeder extends Seeder
 
         DB::table('category_translations')->insert([
 
-            ['id' => '2','name' => 'Fashion','slug' => 'fashion','description' => 'Fashion','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '2','locale' => 'en'],
+            ['id' => '6','name' => 'Fashion','slug' => 'fashion','description' => 'Fashion','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '2','locale' => 'en'],
 
-            ['id' => '3','name' => 'Blankets, Quilts & Wraps','slug' => 'blankets','description' => 'Blankets, Quilts & Wraps','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '3','locale' => 'en'],
+            ['id' => '7','name' => 'Blankets, Quilts & Wraps','slug' => 'blankets','description' => 'Blankets, Quilts & Wraps','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '3','locale' => 'en'],
 
-            ['id' => '4','name' => 'Shoe','slug' => 'shoe','description' => 'Shoe','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '4','locale' => 'en'],
+            ['id' => '8','name' => 'Shoe','slug' => 'shoe','description' => 'Shoe','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '4','locale' => 'en'],
 
-            ['id' => '5','name' => 'Toys','slug' => 'toys','description' => 'Toys','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '5','locale' => 'en'],
+            ['id' => '9','name' => 'Toys','slug' => 'toys','description' => 'Toys','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '5','locale' => 'en'],
 
-            ['id' => '6','name' => 'Body & Oral Care','slug' => 'bodycare','description' => 'Body & Oral Care','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '6','locale' => 'en'],
-            ['id' => '7','name' => 'Cloths','slug' => 'cloths','description' => 'Cloths','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '7','locale' => 'en'],
+            ['id' => '10','name' => 'Body & Oral Care','slug' => 'bodycare','description' => 'Body & Oral Care','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '6','locale' => 'en'],
+            ['id' => '11','name' => 'Cloths','slug' => 'cloths','description' => 'Cloths','meta_title' => '','meta_description' => '','meta_keywords' => '','category_id' => '7','locale' => 'en'],
         ]);
     }
 }
