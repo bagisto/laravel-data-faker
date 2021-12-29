@@ -555,7 +555,7 @@ class ProductFlatRepository extends Repository
     public function uploadImages($faker, $product)
     {
 
-        $filepath = storage_path('app/public/product/');
+        $filepath = Storage::path('product/');
 
         Storage::makeDirectory('/product/'. $product['product_id']);
 
