@@ -13,6 +13,10 @@ class ProductCategoryTableDataSeeder extends Seeder
         DB::table('categories')
         ->where('categories.id' ,'<>' ,1)
         ->delete();
+        // Removing Bagisto defaut seeds
+        DB::table('category_translations')
+        ->where('categories.id' ,'<>' ,1)
+        ->delete();
 
         DB::table('categories')
         ->where('categories.id', 1)
