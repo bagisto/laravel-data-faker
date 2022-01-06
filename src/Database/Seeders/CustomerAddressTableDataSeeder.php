@@ -7,12 +7,8 @@ use DB;
 
 class CustomerAddressTableDataSeeder extends Seeder
 {
-    public function run()
+    public function run($count)
     {
-        $count = 10;
-        DB::table('customers')->delete();
-        DB::table('addresses')->where('address_type', 'customer')->delete();
-
-        $data = factory(\Webkul\Customer\Models\CustomerAddress::class, $count)->create();
+        $data = factory(\Webkul\Customer\Models\CustomerAddress::class, (int)$count)->create();
     }
 }

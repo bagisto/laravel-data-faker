@@ -16,5 +16,9 @@ class DataFakerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../Database/Factories' => database_path('factories'),
         ]);
+
+        $this->commands([
+            \Webkul\DataFaker\Commands\Console\SeedData::class
+        ]);
     }
 }

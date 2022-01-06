@@ -28,7 +28,7 @@ class ProductTableDataSeeder extends Seeder
 
     public function run()
     {
-        $count = 10;
+        $count = 2;
         DB::table('products')->delete();
         DB::table('product_flat')->delete();
         DB::table('product_inventories')->delete();
