@@ -3,6 +3,7 @@
 namespace Webkul\DataFaker\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
 class DataFakerServiceProvider extends ServiceProvider
 {
@@ -13,12 +14,22 @@ class DataFakerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->publishes([
-            __DIR__ . '/../Database/Factories' => database_path('factories'),
-        ]);
+        $this->registerEloquentFactoriesFrom(__DIR__ . '/../Database/Factories');
 
         $this->commands([
             \Webkul\DataFaker\Commands\Console\SeedData::class
         ]);
+    }
+
+     /**
+     * Register factories.
+     *
+     * @param  string  $path
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function registerEloquentFactoriesFrom($path): void
+    {
+        $this->app->make(EloquentFactory::class)->load($path);
     }
 }
