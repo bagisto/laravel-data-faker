@@ -1,73 +1,33 @@
 <?php
 
-namespace Webkul\DataFaker\Database\Seeders;
+namespace Webkul\DataFaker\Database\Factories\Product;
 
-use Illuminate\Database\Seeder;
-use Webkul\DataFaker\Database\Factories\Product\ProductAttributeValueFactory;
-use Webkul\DataFaker\Database\Factories\Product\ProductFactory;
-use Webkul\DataFaker\Database\Factories\Product\AttributeFactory;
-use Webkul\Product\Models\ProductAttributeValue;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Generator as Faker;
-use Webkul\DataFaker\Database\Factories\Product\ProductFlatFactory;
-use Webkul\DataFaker\Database\Factories\Product\ProductImageFactory;
-use Webkul\DataFaker\Database\Factories\Product\ProductInventoryFactory;
+use Webkul\Product\Models\ProductAttributeValue;
 
-class ProductTableDataSeeder extends Seeder
+class ProductAttributeValueFactory extends Factory
 {
-    protected $faker;
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = ProductAttributeValue::class;
 
-    public function __construct(Faker $faker)
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
     {
-        $this->faker = $faker;
-    }
+        return [
+            'locale'       => 'en',
+            'channel'      => 'default',
+            'attribute_id' => 1
+        ];
 
-    public function run()
-    {
-        $productFactory = new ProductFactory();
-        $attributeValueFacroty = new ProductAttributeValueFactory();
-        $attributeFacroty = new AttributeFactory();
-        $inventory = new ProductInventoryFactory();
-        $image = new ProductImageFactory();
-
-        //seed fake products
-        $productFactory
-            ->count(1)
-            ->has($inventory, 'inventories')
-            ->has($image->count(4)->state(function (array $value, $product) {
-
-                $imageData = $this->uploadImages($product['id']);
-                return $imageData;
-
-            }), 'images')
-            ->has($attributeValueFacroty->state( function (array $value, $product) {
-
-                $data = $this->withAttribute();
-
-                $attributeValues = $data['attribute'];
-
-                $productId = $product['id'];
-                $data['data']['product_id'] = $productId;
-
-                $productData = $data['data'];
-
-                $attributeValueFacroty = new ProductAttributeValueFactory();
-
-                foreach($attributeValues as $attributeValue) {
-                    $attributeValue['product_id'] = $productId;
-
-                    $attributeValueFacroty->state($attributeValue)->create();
-                }
-
-                $productFlat = new ProductFlatFactory();
-                $productFlat->state($productData)->create();
-
-                return null;
-                // return ['product_id' => $productId];
-
-            }), 'attribute_values')
-
-
-            ->create();
     }
 
     public function withAttribute()
@@ -104,18 +64,18 @@ class ProductTableDataSeeder extends Seeder
 
             $attributeValue[ProductAttributeValue::$attributeTypeFields[$attribute->type]] = $attributeValue['value'];
 
+
+
             unset($attributeValue['value']);
-            // dd($attributeValue);
-            // return $this->state($attributeValue);
-
             $value[] = $attributeValue;
-
 
         }
 
+        // return $value;
         return ['attribute' => $value, 'data' => $fakeData];
-        // dd($attributeValue);
     }
+
+
 
     /**
      * Dummy Data For Simple Product

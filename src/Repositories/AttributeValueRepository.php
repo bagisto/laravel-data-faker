@@ -188,7 +188,7 @@ class AttributeValueRepository extends Repository
         }
 
         if (! $attribute)
-            return;
+            return;0
 
         $data[ProductAttributeValue::$attributeTypeFields[$attribute->type]] = $data['value'];
 

@@ -4,17 +4,16 @@ namespace Webkul\DataFaker\Database\Factories\Product;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Generator as Faker;
-use Webkul\Product\Models\Product;
-use Webkul\Product\Models\ProductAttributeValue;
+use Webkul\Product\Models\ProductInventory;
 
-class ProductFactory extends Factory
+class ProductInventoryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Product::class;
+    protected $model = ProductInventory::class;
 
     /**
      * Define the model's default state.
@@ -24,9 +23,8 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'sku'                 => $this->faker->uuid,
-            'attribute_family_id' => 1,
-            'type'                => 'simple'
+            'qty'                 => $this->faker->numberBetween(100, 200),
+            'inventory_source_id' => 1,
         ];
 
     }

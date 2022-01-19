@@ -23,7 +23,7 @@ use DB;
  *
  * @copyright 2019 Webkul Software Pvt Ltd (http://www.webkul.com)
  */
-class ProductFlatRepository extends Repository
+class ProductFlatRepository
 {
     /**
      *  Product Attribute Value Repository Object
@@ -115,8 +115,8 @@ class ProductFlatRepository extends Repository
         ProductImageRepository $productImage,
         CategoryRepository $categoryRepository,
         RelatedProductRepository $relatedProduct,
-        Product $product,
-        App $app
+        Product $product
+        // App $app
     )
     {
         $this->attribute = $attribute;
@@ -139,18 +139,18 @@ class ProductFlatRepository extends Repository
 
         $this->categoryRepository = $categoryRepository;
 
-        parent::__construct($app);
+        // parent::__construct($app);
     }
 
-    /**
-     * Specify Model class name
-     *
-     * @return mixed
-     */
-    function model()
-    {
-        return 'Webkul\Product\Contracts\Product';
-    }
+    // /**
+    //  * Specify Model class name
+    //  *
+    //  * @return mixed
+    //  */
+    // function model()
+    // {
+    //     return 'Webkul\Product\Contracts\Product';
+    // }
 
     /**
      * Create Product Dummy Data.
@@ -160,6 +160,7 @@ class ProductFlatRepository extends Repository
      */
     public function getProductFlatDummyData($faker, $productType)
     {
+        dd($faker, $productType);
         switch( $productType ) {
             case 'simple':
                 $fakeData = $this->getSimpleProductDummyData($faker ,$productType);
@@ -235,6 +236,7 @@ class ProductFlatRepository extends Repository
             'locale' => $localeCode,
         ];
 
+        dd($data);
         return $data;
     }
 
