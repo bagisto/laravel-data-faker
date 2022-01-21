@@ -19,11 +19,10 @@ use Illuminate\Support\Facades\Storage;
 use DB;
 
 /**
- * Product Flat Reposotory
+ * Data Faker Product  Reposotory
  *
- * @copyright 2019 Webkul Software Pvt Ltd (http://www.webkul.com)
  */
-class ProductFlatRepository
+class ProductRepository
 {
     /**
      *  Product Attribute Value Repository Object
@@ -108,7 +107,7 @@ class ProductFlatRepository
     public function __construct(
         AttributeRepository $attribute,
         AttributeFamilyRepository $attributeFamilyRepository,
-        AttributeValueRepository $productAttributeValue,
+        // AttributeValueRepository $productAttributeValue,
         ProductFlat $productFlat,
         BaseProductRepository $baseProductRepository,
         ProductInventoryRepository $productInventory,
@@ -116,14 +115,14 @@ class ProductFlatRepository
         CategoryRepository $categoryRepository,
         RelatedProductRepository $relatedProduct,
         Product $product
-        // App $app
+
     )
     {
         $this->attribute = $attribute;
 
         $this->attributeFamilyRepository = $attributeFamilyRepository;
 
-        $this->productAttributeValue = $productAttributeValue;
+        // $this->productAttributeValue = $productAttributeValue;
 
         $this->baseProductRepository = $baseProductRepository;
 
@@ -138,135 +137,23 @@ class ProductFlatRepository
         $this->relatedProduct = $relatedProduct;
 
         $this->categoryRepository = $categoryRepository;
-
-        // parent::__construct($app);
-    }
-
-    // /**
-    //  * Specify Model class name
-    //  *
-    //  * @return mixed
-    //  */
-    // function model()
-    // {
-    //     return 'Webkul\Product\Contracts\Product';
-    // }
-
-    /**
-     * createProductCategories Product Dummy Data.
-     *
-     * @param $faker
-     * @return mixed
-     */
-    public function getProductFlatDummyData($faker, $productType)
-    {
-        dd($faker, $productType);
-        switch( $productType ) {
-            case 'simple':
-                $fakeData = $this->getSimpleProductDummyData($faker ,$productType);
-                return $fakeData;
-            case 'configurable':
-                $fakeData = $this->getConfigurableProductDummyData($faker, $productType);
-                return $fakeData;
-        }
-    }
-
-    /**
-     * Dummy Data For Simple Product
-     *
-     * @param $faker, $productType
-     * @return array
-     */
-    public function getSimpleProductDummyData($faker, $productType)
-    {
-        $productName = $faker->userName;
-
-        $sku = substr(strtolower(str_replace(array('a','e','i','o','u'), '', $productName)), 0, 6);
-
-        $productSku = str_replace(' ', '', $sku) . "-". str_replace(' ', '', $sku) . "-" . rand(1,9999999) . "-" . rand(1,9999999);
-
-        $price = $faker->numberBetween($min = 0, $max = 500);
-
-        $specialPrice = rand('0', $faker->numberBetween($min = 0, $max = 500));
-
-        if ($specialPrice == 0) {
-            $max = $price;
-            $min = $price;
-        } else {
-            $max = $specialPrice;
-            $min = $specialPrice;
-        }
-
-        $localeCode = core()->getCurrentLocale()->code;
-
-        $channelCode = core()->getCurrentChannel()->code;
-
-        $productFaker = \Faker\Factory::create();
-
-        $productFaker->addProvider(new \Bezhanov\Faker\Provider\Commerce($productFaker));
-
-        $data = [
-            'sku' => $productSku,
-            'name' => $productFaker->productName,
-            'url_key' => $faker->unique(true)->word . '-' . rand(1,9999999),
-            'new' => 1,
-            'featured' => 1,
-            'visible_individually' => 1,
-            'min_price' => $min,
-            'max_price' => $max,
-            'status' => 1,
-            'color' => 1,
-            'price' => $price,
-            'special_price' => 0,
-            'special_price_from' => null,
-            'special_price_to' => null,
-            'width' => $faker->randomNumber(2),
-            'height' => $faker->randomNumber(2),
-            'depth' => $faker->randomNumber(2),
-            'meta_title' => '',
-            'meta_keywords' => '',
-            'meta_description' => '',
-            'weight' => $faker->randomNumber(2),
-            'color_label' => $faker->colorName,
-            'size' => 6,
-            'size_label' => 'S',
-            'short_description' => '<p>' . $faker->paragraph . '</p>',
-            'description' => '<p>' . $faker->paragraph . '</p>',
-            'channel' => $channelCode,
-            'locale' => $localeCode,
-        ];
-
-        dd($data);
-        return $data;
     }
 
     /**
      * Dummy Data For Configurable Product
      *
-     * @param $faker, $productType
+     * @param $faker, $product
      * @return array
      */
-    public function getConfigurableProductDummyData($faker, $productType)
+    public function getSuperAttribute($faker, $product)
     {
         $productFaker = \Faker\Factory::create();
 
         $productFaker->addProvider(new \Bezhanov\Faker\Provider\Commerce($productFaker));
 
-        $productName = $productFaker->productName;
+        $data = $this->createConfigurableProduct($product, $faker, $productFaker);
 
-        $sku = substr(strtolower(str_replace(array('a','e','i','o','u'), '', $productName)), 0, 6);
-
-        $productSku = str_replace(' ', '', $sku) . "-" . rand(100,9999999);
-
-        $attributeFamily = $this->attributeFamilyRepository->get()->random();
-
-        $productsTableData = [
-            'type' =>'configurable',
-            'attribute_family_id' => $attributeFamily->id,
-            'sku' => $productSku,
-        ];
-
-        $this->createConfigurableProduct($productsTableData, $faker, $productFaker);
+        return $data;
     }
 
     /**
@@ -277,26 +164,24 @@ class ProductFlatRepository
      */
     public function createConfigurableProduct($product, $faker, $productFaker)
     {
-        $parentData = $this->createProduct($product,$faker,$productFaker);
+        // $parentData = $this->createProduct($product,$faker,$productFaker);
         $data = [
             'super_attributes' =>[
                 'size' => [
                     0 => 6,
                     1 => 7,
-                    // 2 => 8,
-                    // 3 => 9
                 ]
             ],
             'family' => 1
         ];
 
-        $nameAttribute = $this->attribute->findOneByField('code', 'status');
+        // $nameAttribute = $this->attribute->findOneByField('code', 'status');
 
-        $addttribute = $this->productAttributeValue->createValue([
-                'product_id' => $product->id,
-                'attribute_id' => $nameAttribute->id,
-                'value' => 1
-            ]);
+        // $addttribute = $this->productAttributeValue->createValue([
+        //         'product_id' => $product->id,
+        //         'attribute_id' => $nameAttribute->id,
+        //         'value' => 1
+        //     ]);
 
         if (isset($data['super_attributes'])) {
 
@@ -310,14 +195,19 @@ class ProductFlatRepository
                 $product->super_attributes()->attach($attribute->id);
             }
 
-            foreach (array_permutation($super_attributes) as $permutation) {
-                $variantProduct = $this->createVariant($product, $permutation, $faker);
+            return ['data' => $data, 'superAttribute' => array_permutation($super_attributes)];
 
-                if (isset($variantProduct)) {
-                    //insert data into product flat
-                   $this->createVariantProduct($variantProduct->getOriginal(), $faker, $productFaker, $permutation['24']);
-                }
-            }
+            dd($product, $super_attributes, $data, );
+
+
+            // foreach (array_permutation($super_attributes) as $permutation) {
+            //
+
+            //     if (isset($variantProduct)) {
+            //         //insert data into product flat
+            //        $this->createVariantProduct($variantProduct->getOriginal(), $faker, $productFaker, $permutation['24']);
+            //     }
+            // }
         }
     }
 
@@ -341,6 +231,8 @@ class ProductFlatRepository
                 "status" => 1
             ];
         }
+
+        return $data;
 
         $variant = $this->model->create([
             'parent_id' => $product->id,
@@ -545,72 +437,5 @@ class ProductFlatRepository
         $this->productAttributeValue->createAttributeValue($data);
 
         $this->productFlat->create($data);
-    }
-
-    /**
-     * Upload Product Images
-     *
-     * @param mixed $product
-     * @param array $productFaker
-     * @return mixed
-     */
-    public function uploadImages($faker, $product)
-    {
-
-        $filepath = storage_path('app/public/product/');
-
-        Storage::makeDirectory('/product/'. $product['product_id']);
-
-        $path = $faker->image($filepath. $product['product_id'], 800, 800, 'food', true, true);
-
-
-        $pos = strpos($path, 'product');
-
-        $imagePath = substr($path, $pos);
-
-        $data = [
-            'path' => $imagePath,
-            'product_id' => $product['product_id']
-        ];
-
-        return $data;
-    }
-
-    /**
-     * Create Product Categories
-     *
-     * @param mixed $product
-     * @param array $productFaker
-     * @return mixed
-     */
-    public function createProductCategories($product, $faker)
-    {
-        $categories = $this->categoryRepository->all()->random(3);
-
-        $filterableAttribute = ['11', '23', '24', '25'];
-
-        foreach ($categories as $category) {
-            if (! empty($category->translations) && count($category->translations) > 0) {
-                foreach ($category->translations as $translation) {
-
-                    DB::table('product_categories')->insert([
-                        'product_id' => $product['product_id'],
-                        'category_id' => $translation->category_id,
-                    ]);
-
-                    foreach ($filterableAttribute as $categoryFilterableAttribute) {
-
-                        $categoryExist = DB::table('category_filterable_attributes')->where('category_id',$translation->category_id)->count();
-
-                        if ($categoryExist < 4) {
-                            DB::table('category_filterable_attributes')->insert([
-                                'attribute_id' => $categoryFilterableAttribute,
-                                'category_id' => $translation->category_id,
-                            ]);
-                        }
-                    }
-                }
-            }
-        }
     }
 }

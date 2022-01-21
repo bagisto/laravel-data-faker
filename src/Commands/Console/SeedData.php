@@ -76,7 +76,9 @@ class SeedData extends Command
                         $this->comment('Customers Created Successfully.');
                         break;
                     case 2:
-
+                        if ($this->confirm('Do you want to seed product category?')) {
+                            session()->put('seed_product_category', true);
+                        }
                         break;
                     case 3:
                         $parent = $this->ask('Enter the number of parent categories');

@@ -52,7 +52,6 @@ $factory->define(\Webkul\Product\Models\ProductFlat::class, function (Faker $fak
 
         factory(\Webkul\Product\Models\ProductImage::class, 5)->create($fakeImage);
 
-
         $category = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->createProductCategories($product, $faker);
 
         return $fakeData;
