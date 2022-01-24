@@ -3,8 +3,6 @@
 namespace Webkul\DataFaker\Database\Factories\Product;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Generator as Faker;
-use Webkul\Product\Models\Product;
 use Webkul\Product\Models\ProductFlat;
 
 class ProductFlatFactory extends Factory

@@ -3,7 +3,6 @@
 namespace Webkul\DataFaker\Database\Factories\Product;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Generator as Faker;
 use Webkul\Product\Models\ProductAttributeValue;
 
 class ProductAttributeValueFactory extends Factory
@@ -55,7 +54,6 @@ class ProductAttributeValueFactory extends Factory
             }
 
             $attributeValue = [
-                // 'product_id' => $product['product_id'],
                 'attribute_id' => $attribute->id,
                 'value' => $fakeData[$attribute->code],
                 'channel' => $attribute->value_per_channel ? $fakeData['channel'] : null,
@@ -71,7 +69,6 @@ class ProductAttributeValueFactory extends Factory
 
         }
 
-        // return $value;
         return ['attribute' => $value, 'data' => $fakeData];
     }
 

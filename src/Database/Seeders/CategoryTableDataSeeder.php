@@ -2,7 +2,6 @@
 
 namespace Webkul\DataFaker\Database\Seeders;
 
-use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
 class CategoryTableDataSeeder extends Seeder

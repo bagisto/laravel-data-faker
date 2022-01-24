@@ -3,6 +3,7 @@
 namespace Webkul\DataFaker\Database\Factories\Product;
 
 use DB;
+use Carbon\Carbon;
 use Webkul\Product\Models\Product;
 use Webkul\Product\Models\ProductAttributeValue;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,20 +25,19 @@ class ProductFactory extends Factory
     public function definition()
     {
         $productFaker = \Faker\Factory::create();
-
         $productFaker->addProvider(new \Bezhanov\Faker\Provider\Commerce($productFaker));
-
         $productName = $productFaker->productName;
 
         $sku = substr(strtolower(str_replace(array('a','e','i','o','u'), '', $productName)), 0, 6);
 
         $productSku = str_replace(' ', '', $sku) . "-" . rand(100,9999999);
 
+        $type = session()->get('seed_config_product') ? $this->faker->randomElement(['simple', 'configurable']) : 'simple';
+
         return [
             'sku'                 => $productSku,
             'attribute_family_id' => 1,
-            // 'type'                => $this->faker->randomElement(['simple', 'configurable'])
-            'type'                => 'configurable'
+            'type'                => $type
         ];
 
     }
@@ -48,9 +48,11 @@ class ProductFactory extends Factory
 
             $attributeValueFacroty = new ProductAttributeValueFactory();
             $productFlat = new ProductFlatFactory();
+            $inventory = new ProductInventoryFactory();
+            $productFactory = new ProductFactory();
 
             if ($product->type == 'simple') {
-                $data = $this->getSimpleProductData($product);
+                $data = $this->getSimpleProductData($product, 6);
                 //seed simple product related tables
                 $attributeValues = $data['attribute'];
                 $productData = $data['data'];
@@ -74,9 +76,21 @@ class ProductFactory extends Factory
                 }
             } else {
 
+                if(session()->get('seed_product_category') == true) {
+                    $categories = $this->getCategory();
+
+                    foreach ($categories as $categoryId) {
+
+                        DB::table('product_categories')->insert([
+                            'product_id' => $product['id'],
+                            'category_id' => $categoryId,
+                        ]);
+                    }
+                }
+
                 //seed configurable product related tables
                 //create configurable product
-                $configData = $this->getSimpleProductData($product);
+                $configData = $this->getSimpleProductData($product, null);
 
                 $attributeValues = $configData['attribute'];
                 $productData = $configData['data'];
@@ -88,26 +102,26 @@ class ProductFactory extends Factory
                 $configurableFlat = $productFlat->state($productData)->create();
 
                 //create variant
-                $data = app('Webkul\DataFaker\Repositories\ProductRepository')->getSuperAttribute($this->faker,$product);
+                $data = app('Webkul\DataFaker\Repositories\ProductRepository')->getSuperAttribute($product);
 
                 foreach ($data['superAttribute'] as  $permutation) {
 
-                    $variantProductData = app('Webkul\DataFaker\Repositories\ProductRepository')->createVariant($product, $permutation, $this->faker);
-
-                    $variant = $this->state([
+                    $variant = $productFactory->state([
                         'parent_id' => $product['id'],
                         'type' => 'simple',
                         'attribute_family_id' => 1,
-                        'sku' => $variantProductData['sku'],
-                    ])->create()->first();
+                        'sku' => $product['sku'] . '-variant-' . implode('-', $permutation),
+                    ])
+                    ->has($inventory, 'inventories')
+                    ->create();
 
-                    $variantData = $this->getSimpleProductData($variant);
+
+                    $variantData = $this->getSimpleProductData($variant, $permutation['24']);
 
                     $variantAttributeValues = $variantData['attribute'];
                     $variantProductData = $variantData['data'];
 
                     foreach($variantAttributeValues as $value) {
-
                         $attributeValueFacroty->state($value)->create();
                     }
 
@@ -117,13 +131,11 @@ class ProductFactory extends Factory
                         'integer_value' => $permutation[24]
                     ])->create();
 
-
                     $variantProductData['parent_id'] = $configurableFlat['id'];
 
                     $productFlat->state($variantProductData)->create();
                 }
             }
-
         });
     }
 
@@ -133,10 +145,9 @@ class ProductFactory extends Factory
      * @param int $productId
      * @return array
      */
-    public function getSimpleProductData($product)
+    public function getSimpleProductData($product, $size)
     {
-        $fakeData = $this->getProductFlatData($this->faker, $product);
-
+        $fakeData = $this->getProductFlatData($this->faker, $product, $size);
         $attributes = app('Webkul\Attribute\Repositories\AttributeRepository')->get();
 
         foreach ($attributes as $attribute) {
@@ -158,7 +169,6 @@ class ProductFactory extends Factory
             }
 
             $attributeValue = [
-                // 'product_id' => $product['product_id'],
                 'attribute_id' => $attribute->id,
                 'value' => $fakeData[$attribute->code],
                 'channel' => $attribute->value_per_channel ? $fakeData['channel'] : null,
@@ -173,20 +183,34 @@ class ProductFactory extends Factory
 
         }
 
-        // return $value;
         return ['attribute' => $value, 'data' => $fakeData];
     }
 
     /**
      * Dummy Data For Simple Product
      *
-     * @param $faker, $productType
+     * @param $faker, $productType, $size
      * @return array
      */
-    public function getProductFlatData($faker, $product)
+    public function getProductFlatData($faker, $product, $size)
     {
         $price = $faker->numberBetween($min = 0, $max = 500);
         $specialPrice = rand('0', $faker->numberBetween($min = 0, $max = 500));
+
+        if($size != null) {
+            switch($size) {
+                case '6': $sizeLabel = 'S';
+                        break;
+                case '7': $sizeLabel = 'M';
+                        break;
+                case '8': $sizeLabel = 'L';
+                        break;
+                case '9': $sizeLabel = 'XL';
+            }
+        } else {
+            $size = 6;
+            $sizeLabel = 'S';
+        }
 
         $parentId = null;
         $new = 1;
@@ -196,6 +220,9 @@ class ProductFactory extends Factory
         $width  = $faker->randomNumber(2);
         $height = $faker->randomNumber(2);
         $depth  = $faker->randomNumber(2);
+        $short_description = '<p>' . $faker->paragraph . '</p>';
+        $description = '<p>' . $faker->paragraph . '</p>';
+        $urlKey = $faker->unique(true)->word . '-' . rand(1,9999999);
 
         if ($product['type'] == 'configurable') {
 
@@ -206,19 +233,27 @@ class ProductFactory extends Factory
             $width =  null;
             $height = null;
             $depth =  null;
+            $specialPrice = null;
+            $max = 0;
+            $min = 0;
+            $size = null;
+            $sizeLabel = null;
 
         } elseif($product['parent_id'] != null && $product['type'] == 'simple') {
             $new = 0;
             $feature = 0;
             $visibleIndividually = 0;
+            $specialPrice = null;
 
-            if ($specialPrice == 0) {
-                $max = $price;
-                $min = $price;
-            } else {
-                $max = $specialPrice;
-                $min = $specialPrice;
-            }
+            $max = $price;
+            $min = $price;
+            $short_description = null;
+            $description = null;
+            $width =  null;
+            $height = null;
+            $depth =  null;
+            $urlKey = null;
+
         } else {
             if ($specialPrice == 0) {
                 $max = $price;
@@ -232,13 +267,12 @@ class ProductFactory extends Factory
         $localeCode = core()->getCurrentLocale()->code;
         $channelCode = core()->getCurrentChannel()->code;
         $productFaker = \Faker\Factory::create();
-
         $productFaker->addProvider(new \Bezhanov\Faker\Provider\Commerce($productFaker));
 
         $data = [
             'sku' => $product['sku'],
             'name' => $productFaker->productName,
-            'url_key' => $faker->unique(true)->word . '-' . rand(1,9999999),
+            'url_key' => $urlKey,
             'new' => $new,
             'featured' => $feature,
             'visible_individually' => $visibleIndividually,
@@ -258,19 +292,26 @@ class ProductFactory extends Factory
             'meta_description' => '',
             'weight' => $weight,
             'color_label' => $faker->colorName,
-            'size' => 6,
-            'size_label' => 'S',
-            'short_description' => '<p>' . $faker->paragraph . '</p>',
-            'description' => '<p>' . $faker->paragraph . '</p>',
+            'size' => $size,
+            'size_label' => $sizeLabel,
+            'short_description' => $short_description,
+            'description' => $description,
             'channel' => $channelCode,
             'locale' => $localeCode,
             'product_id' => $product['id'],
-            'parent_id' => $parentId
+            'parent_id' => $parentId,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ];
 
         return $data;
     }
 
+    /**
+     * Get random categories
+     *
+     * @return $categories
+     */
     public function getCategory()
     {
         $categories = app('Webkul\Category\Repositories\CategoryRepository')->all()->random(2)->pluck('id');

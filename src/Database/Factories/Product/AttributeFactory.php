@@ -2,9 +2,8 @@
 
 namespace Webkul\DataFaker\Database\Factories\Product;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Generator as Faker;
 use Webkul\Attribute\Models\Attribute;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AttributeFactory extends Factory
 {

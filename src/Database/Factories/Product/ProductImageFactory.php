@@ -3,8 +3,8 @@
 namespace Webkul\DataFaker\Database\Factories\Product;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Webkul\Product\Models\ProductImage;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductImageFactory extends Factory
 {
@@ -23,14 +23,13 @@ class ProductImageFactory extends Factory
     public function definition()
     {
         return [
-            'path'                 => $this->faker->uuid,
+            'path' => $this->faker->uuid,
         ];
     }
 
     /**
      * Upload Product Images
      *
-     * @param array $productFaker
      * @param int $productId
      * @return array
      */

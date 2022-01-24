@@ -2,13 +2,10 @@
 
 namespace Webkul\DataFaker\Database\Factories\Customer;
 
-use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use \Webkul\Customer\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Arr;
 
 class CustomerFactory extends Factory
 {

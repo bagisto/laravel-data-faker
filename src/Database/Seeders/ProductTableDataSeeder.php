@@ -2,7 +2,6 @@
 
 namespace Webkul\DataFaker\Database\Seeders;
 
-use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 use Webkul\DataFaker\Database\Factories\Product\ProductFactory;
 use Webkul\DataFaker\Database\Factories\Product\ProductImageFactory;
@@ -10,14 +9,7 @@ use Webkul\DataFaker\Database\Factories\Product\ProductInventoryFactory;
 
 class ProductTableDataSeeder extends Seeder
 {
-    protected $faker;
-
-    public function __construct(Faker $faker)
-    {
-        $this->faker = $faker;
-    }
-
-    public function run()
+    public function run($count)
     {
         $productFactory = new ProductFactory();
         $inventory = new ProductInventoryFactory();
@@ -25,17 +17,21 @@ class ProductTableDataSeeder extends Seeder
 
         //seed fake products
         $productFactory
-            ->count(1)
+            ->count($count)
             ->configure()
-            // ->has($inventory, 'inventories')
-            // ->has($image->count(2)->state(function (array $value, $product) {
+            ->has($inventory->state(function (array $value, $product) {
+                if ($product['type'] == 'configurable') {
+                    return ['qty' => 0];
+                } else {
+                    return ['inventory_source_id' => $value['inventory_source_id']];
+                }
+            }), 'inventories')
+            ->has($image->count(2)->state(function (array $value, $product) {
 
-            //     $imageData = $this->uploadImages($product['id']);
-            //     return $imageData;
+                $imageData = $this->uploadImages($product['id']);
+                return $imageData;
 
-            // }), 'images')
+            }), 'images')
             ->create();
-
-            session()->forget('seed_product_category');
     }
 }
