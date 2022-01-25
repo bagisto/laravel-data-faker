@@ -13,7 +13,7 @@ This module allows you to generate fake data that can be populated into the data
 
 ### 2. Requirements:
 
-* **Bagisto**: v1.2.0
+* **Bagisto**: v1.3.2, v1.3.3.
 
 ### 3. Installation:
 
