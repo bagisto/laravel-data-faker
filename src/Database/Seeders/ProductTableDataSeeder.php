@@ -3,64 +3,35 @@
 namespace Webkul\DataFaker\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Webkul\Attribute\Repositories\AttributeRepository;
-use DB;
-use Faker\Generator as Faker;
+use Webkul\DataFaker\Database\Factories\Product\ProductFactory;
+use Webkul\DataFaker\Database\Factories\Product\ProductImageFactory;
+use Webkul\DataFaker\Database\Factories\Product\ProductInventoryFactory;
 
 class ProductTableDataSeeder extends Seeder
 {
-    /**
-     *  Product Repository Object
-     *
-     * @var array
-     */
-    protected $product;
-
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
-    public function __construct(AttributeRepository $attributeRepository)
+    public function run($count)
     {
-        $this->attributeRepository = $attributeRepository;
-    }
+        $productFactory = new ProductFactory();
+        $inventory = new ProductInventoryFactory();
+        $image = new ProductImageFactory();
 
-    public function run()
-    {
-        $count = 10;
-        DB::table('products')->delete();
-        DB::table('product_flat')->delete();
-        DB::table('product_inventories')->delete();
-        DB::table('product_images')->delete();
-        DB::table('product_attribute_values')->delete();
+        //seed fake products
+        $productFactory
+            ->count($count)
+            ->configure()
+            ->has($inventory->state(function (array $value, $product) {
+                if ($product['type'] == 'configurable') {
+                    return ['qty' => 0];
+                } else {
+                    return ['inventory_source_id' => $value['inventory_source_id']];
+                }
+            }), 'inventories')
+            ->has($image->count(2)->state(function (array $value, $product) {
 
+                $imageData = $this->uploadImages($product['id']);
+                return $imageData;
 
-        factory(\Webkul\Product\Models\Product::class, $count)->create()->each(function ($product) {
-            $faker = \Faker\Factory::create();
-
-            $productType = $faker->randomElement(['simple', 'configurable']);
-
-            $product->update(['type' => $productType]);
-
-            if ($product->type == 'simple') {
-                factory(\Webkul\Product\Models\ProductFlat::class)->create(['product_id' => $product]);
-
-                factory(\Webkul\Product\Models\ProductInventory::class)->create(['product_id' => $product->id, 'inventory_source_id' => 1]);
-            }
-
-            if ($product->type == 'configurable') {
-
-                $productFaker = \Faker\Factory::create();
-                $faker = \Faker\Factory::create();
-                $productFaker->addProvider(new \Bezhanov\Faker\Provider\Commerce($productFaker));
-
-                $fakeImage = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->uploadImages($faker, $product);
-
-                factory(\Webkul\Product\Models\ProductImage::class, 5)->create($fakeImage);
-
-                $fakeData = app('Webkul\DataFaker\Repositories\ProductFlatRepository')->createConfigurableProduct($product, $faker, $productFaker);
-            }
-        });
+            }), 'images')
+            ->create();
     }
 }

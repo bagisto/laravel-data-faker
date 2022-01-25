@@ -1,10 +1,11 @@
 {
     "name": "bagisto/laravel-datafaker",
-    "description": "Add fake data of products and customers in Bagisto.",
+    "description": "Add fake data of Products and Customers and Category in Bagisto.",
     "keywords": [
         "bagisto",
         "fake products",
-        "fake customers"
+        "fake customers",
+        "fake categories"
     ],
     "homepage": "https://github.com/bagisto/laravel-data-faker",
     "license": "MIT",
