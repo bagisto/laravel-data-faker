@@ -24,7 +24,7 @@ composer require bagisto/laravel-datafaker
 * Run the following command below to complete the setup
 
 ```sh
-php artisan config cache
+php artisan config:cache
 ```
 ```sh
 php artisan seed:fake:data
