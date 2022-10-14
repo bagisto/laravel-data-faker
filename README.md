@@ -5,15 +5,13 @@
 
 This module allows you to generate fake data that can be populated into the database during development for testing purposes.  
 
-* user can create fake data from terminal.
-* The user can create Product fake data.
-* The user can create Customers fake data.
-* The user can create some Category fake data.
-* The user can create Product Category fake data.
+* User can create customers
+* User can create categories
+* User can create products (Simple, Virtual, Downloadable and Configurable)
 
 ### 2. Requirements:
 
-* **Bagisto**: v1.3.2, v1.3.3.
+* **Bagisto**: master
 
 ### 3. Installation:
 
@@ -27,8 +25,8 @@ composer require bagisto/laravel-datafaker
 php artisan config:cache
 ```
 ```sh
-php artisan seed:fake:data
+php artisan bagisto:fake
 ```
-->Select one of the option the data you want to seed.
+-> Select suitable option to create records
 
 ->That's all 
