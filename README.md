@@ -19,11 +19,14 @@ This module allows you to generate fake data that can be populated into the data
 composer require bagisto/laravel-datafaker
 ```
 
-* Run the following command below to complete the setup
+* Run the following commands to complete the setup
 
 ```sh
 php artisan config:cache
+php artisan queue:batches-table
+php artisan migrate
 ```
+* You can start using the module by running the command below:
 ```sh
 php artisan bagisto:fake
 ```
