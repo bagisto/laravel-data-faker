@@ -10,13 +10,13 @@ class Faker
      * @var array
      */
     protected $entities = [
-        'customers'  => Customer::Class,
-        'categories' => Category::Class,
-        'products'   => Product::Class,
+        'customers'  => Customer::class,
+        'categories' => Category::class,
+        'products'   => Product::class,
     ];
 
     /**
-     * Fake data
+     * Fake data.
      *
      * @param  string  $entity
      * @param  integer  $count
@@ -29,10 +29,8 @@ class Faker
         $productType
     )
     {
-        if ($entity == 'products') {
-            app($this->entities[$entity])->create($count, strtolower($productType ?? 'all'));
-        } else {
-            app($this->entities[$entity])->create($count);
-        }
+        return $entity == 'products'
+            ? app($this->entities[$entity])->create($count, strtolower($productType ?? 'all'))
+            : app($this->entities[$entity])->create($count);
     }
 }

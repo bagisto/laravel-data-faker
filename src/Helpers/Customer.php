@@ -14,7 +14,7 @@ class Customer
      */
     public function create($count)
     {
-        CustomerModel::factory()
+        return CustomerModel::factory()
             ->count($count)
             ->create();
     }

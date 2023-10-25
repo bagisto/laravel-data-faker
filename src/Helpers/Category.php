@@ -14,7 +14,7 @@ class Category
      */
     public function create($count)
     {
-        CategoryModel::factory()
+        return CategoryModel::factory()
             ->count($count)
             ->hasTranslations()
             ->create();
