@@ -26,7 +26,7 @@ class Product
     ];
 
     /**
-     * Product default attributes
+     * Product default attributes.
      *
      * @var array
      */
@@ -44,7 +44,7 @@ class Product
     ];
 
     /**
-     * Super attributes for configurable products
+     * Super attributes for configurable products.
      *
      * @var array
      */
@@ -54,7 +54,7 @@ class Product
     ];
 
     /**
-     * Super attribute options combination for configurable variants
+     * Super attribute options combination for configurable variants.
      *
      * @var array
      */
@@ -66,11 +66,15 @@ class Product
     ];
 
     /**
+     * Locale.
+     *
      * @var string
      */
     protected $locale;
 
     /**
+     * Channel.
+     *
      * @var string
      */
     protected $channel;
@@ -80,23 +84,28 @@ class Product
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected array $options = [])
     {
         $this->locale = app()->getLocale();
 
         $this->channel = core()->getCurrentChannelCode();
+
+        if (isset($this->options['attributes'])) {
+            /**
+             * Please avoid using array_merge() here; we need the same key to come from the options.
+             */
+            $this->attributes = $this->attributes + $this->options['attributes'];
+        }
     }
 
     /**
      * Create a records
      *
-     * @param  integer  $count
-     * @param  string  $productType
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function create($count, $productType)
+    public function create(int $count, string $productType)
     {
-        ProductModel::factory()
+        return ProductModel::factory()
             ->count($count)
             ->state(new Sequence(
                 fn ($sequence) => [
@@ -110,7 +119,7 @@ class Product
             ->hasAttached(Category::inRandomOrder()->limit(2)->get())
             ->has(
                 ProductAttributeValue::factory()
-                    ->count(10)
+                    ->count(count($this->attributes))
                     ->state(new Sequence(
                         fn ($sequence) => $this->getAttributeValues($sequence),
                     )),
@@ -140,7 +149,7 @@ class Product
                         ->for($product, 'parent')
                         ->has(
                             ProductAttributeValue::factory()
-                                ->count(10)
+                                ->count(count($this->attributes))
                                 ->state(new Sequence(
                                     fn ($sequence) => $this->getAttributeValues($sequence),
                                 )),
@@ -183,16 +192,16 @@ class Product
     }
 
     /**
-     * Creates attribute values for the product
+     * Creates attribute values for the product.
      *
      * @param  \Illuminate\Database\Eloquent\Factories\Sequence  $sequence
-     * @return void
+     * @return mixed
      */
     public function getAttributeValues($sequence)
     {
         static $index = 0;
 
-        if (($sequence->index % 10) == 0) {
+        if (($sequence->index % count($this->attributes)) == 0) {
             $index = 0;
         }
 
@@ -204,12 +213,11 @@ class Product
     }
 
     /**
-     * Creates attribute values for the product
+     * Creates attribute values for the product.
      *
-     * @param  string  $code
      * @return mixed
      */
-    public function getAttributeValue($code)
+    public function getAttributeValue(string $code)
     {
         switch ($code) {
             case 'sku':
@@ -263,6 +271,13 @@ class Product
                 return [
                     'text_value' => fake()->numberBetween(0, 100),
                 ];
-        }   
+
+            default:
+                if (isset($this->options['attribute_value'][$code])) {
+                    return $this->options['attribute_value'][$code];
+                }
+
+                return;
+        }
     }
 }
