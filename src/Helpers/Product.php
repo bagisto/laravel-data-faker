@@ -105,8 +105,7 @@ class Product
      */
     public function create(int $count, string $productType)
     {
-        return ProductModel::factory()
-            ->count($count)
+        return $this->factory()
             ->state(new Sequence(
                 fn ($sequence) => [
                     'type' => (
@@ -117,14 +116,6 @@ class Product
                 ],
             ))
             ->hasAttached(Category::inRandomOrder()->limit(2)->get())
-            ->has(
-                ProductAttributeValue::factory()
-                    ->count(count($this->attributes))
-                    ->state(new Sequence(
-                        fn ($sequence) => $this->getAttributeValues($sequence),
-                    )),
-                'attribute_values'
-            )
             ->afterCreating(function ($product) {
                 if (in_array($product->type, ['simple', 'virtual'])) {
                     ProductInventory::factory()
@@ -144,7 +135,6 @@ class Product
                     $product->super_attributes()->attach(array_keys($this->superAttributes));
 
                     ProductModel::factory()
-                        ->count(4)
                         ->simple()
                         ->for($product, 'parent')
                         ->has(
@@ -183,12 +173,160 @@ class Product
 
                             Event::dispatch('catalog.product.update.after', $variant);
                         })
+                        ->count(4)
                         ->create();
                 }
 
                 Event::dispatch('catalog.product.update.after', $product);
             })
+            ->count($count)
             ->create();
+    }
+
+    /**
+     * Get a product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function factory()
+    {
+        return ProductModel::factory()
+            ->has(
+                ProductAttributeValue::factory()
+                    ->count(count($this->attributes))
+                    ->state(new Sequence(
+                        fn ($sequence) => $this->getAttributeValues($sequence),
+                    )),
+                'attribute_values'
+            );
+    }
+
+    /**
+     * Get a simple product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getSimpleProductFactory()
+    {
+        return $this->factory()
+            ->simple()
+            ->afterCreating(function ($product) {
+                ProductInventory::factory()
+                    ->for($product)
+                    ->state(function (array $attributes) {
+                        return [
+                            'inventory_source_id' => 1,
+                        ];
+                    })
+                    ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
+     * Get a virtual product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getVirtualProductFactory()
+    {
+        return $this->factory()
+            ->virtual()
+            ->afterCreating(function ($product) {
+                ProductInventory::factory()
+                    ->for($product)
+                    ->state(function (array $attributes) {
+                        return [
+                            'inventory_source_id' => 1,
+                        ];
+                    })
+                    ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
+     * Get a downloadable product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getDownloadableProductFactory()
+    {
+        return $this->factory()
+            ->downloadable()
+            ->afterCreating(function ($product) {
+                ProductDownloadableLink::factory()
+                    ->for($product)
+                    ->hasTranslations()
+                    ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
+     * Get a configurable product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getConfigurableProductFactory()
+    {
+        return $this->factory()
+            ->configurable()
+            ->afterCreating(function ($product) {
+                $product->super_attributes()->attach(array_keys($this->superAttributes));
+
+                ProductModel::factory()
+                    ->simple()
+                    ->for($product, 'parent')
+                    ->has(
+                        ProductAttributeValue::factory()
+                            ->count(count($this->attributes))
+                            ->state(new Sequence(
+                                fn ($sequence) => $this->getAttributeValues($sequence),
+                            )),
+                        'attribute_values'
+                    )
+                    ->hasInventories(1, [
+                        'inventory_source_id' => 1,
+                    ])
+                    ->afterCreating(function ($variant) {
+                        static $index = 0;
+
+                        $attributeIds = array_keys($this->superAttributes);
+
+                        $currentCombination = $this->superAttributeOptionCombinations[$index++];
+
+                        $variant->attribute_values()->create([
+                            'attribute_id'  => $attributeIds[0],
+                            'integer_value' => $currentCombination[0],
+                        ]);
+
+                        $variant->attribute_values()->create([
+                            'attribute_id'  => $attributeIds[1],
+                            'integer_value' => $currentCombination[1],
+                        ]);
+
+                        $variant->attribute_values()->updateOrCreate([
+                            'attribute_id'  => 7,
+                        ], [
+                            'boolean_value' => 0,
+                        ]);
+
+                        Event::dispatch('catalog.product.update.after', $variant);
+                    })
+                    ->count(4)
+                    ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
     }
 
     /**

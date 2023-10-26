@@ -14,9 +14,19 @@ class Category
      */
     public function create($count)
     {
-        return CategoryModel::factory()
+        return $this->factory()
             ->count($count)
-            ->hasTranslations()
             ->create();
+    }
+
+    /**
+     * Get a category factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function factory()
+    {
+        return CategoryModel::factory()->hasTranslations();
     }
 }
