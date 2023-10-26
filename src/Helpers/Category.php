@@ -7,10 +7,10 @@ use Webkul\Category\Models\Category as CategoryModel;
 class Category
 {
     /**
-     * Create a records
+     * Create a categories.
      *
-     * @param  integer  $count
-     * @return void
+     * @param  int  $count
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function create($count)
     {

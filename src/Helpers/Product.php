@@ -3,13 +3,13 @@
 namespace Webkul\Faker\Helpers;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
+use Webkul\Category\Models\Category;
 use Webkul\Product\Models\Product as ProductModel;
 use Webkul\Product\Models\ProductAttributeValue;
-use Webkul\Product\Models\ProductInventory;
 use Webkul\Product\Models\ProductDownloadableLink;
-use Webkul\Category\Models\Category;
+use Webkul\Product\Models\ProductInventory;
 
 class Product
 {
@@ -99,7 +99,7 @@ class Product
     }
 
     /**
-     * Create a records
+     * Create a products.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -273,6 +273,10 @@ class Product
                 ];
 
             default:
+                /**
+                 * This allows the addition of values to new attributes if the attributes key
+                 * is present in the options property.
+                 */
                 if (isset($this->options['attribute_value'][$code])) {
                     return $this->options['attribute_value'][$code];
                 }

@@ -8,7 +8,6 @@ use Webkul\Faker\Jobs\Faker as FakerJob;
 
 class Faker extends Command
 {
-
     /**
      * The entity to create.
      *
@@ -26,7 +25,7 @@ class Faker extends Command
     /**
      * Number of records to create
      *
-     * @var integer|array
+     * @var int|array
      */
     protected $count = null;
 
@@ -75,7 +74,7 @@ class Faker extends Command
     {
         $choices = $this->getChoices();
 
-        $choice = $this->choice("Which record would you like to create?", $choices);
+        $choice = $this->choice('Which record would you like to create?', $choices);
 
         if ($choice == $choices[0] || is_null($choice)) {
             return;
@@ -103,7 +102,7 @@ class Faker extends Command
         } else {
             $count = $this->ask('Please enter the count');
         }
-        
+
         if (! is_numeric($count)) {
             $this->warn('Warning: limit must be a number.');
 
@@ -175,7 +174,7 @@ class Faker extends Command
      * Create selected records
      *
      * @param  string  $entity
-     * @param  integer  $count
+     * @param  int  $count
      * @param  string  $productType
      * @return void
      */
@@ -183,8 +182,7 @@ class Faker extends Command
         $entity,
         $count,
         $productType = null
-    )
-    {
+    ) {
         $batch = Bus::batch([])->dispatch();
 
         do {
