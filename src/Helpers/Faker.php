@@ -19,7 +19,7 @@ class Faker
      * Fake data.
      *
      * @param  string  $entity
-     * @param  integer  $count
+     * @param  int  $count
      * @param  string  $productType
      * @return void
      */
@@ -27,8 +27,7 @@ class Faker
         $entity,
         $count,
         $productType
-    )
-    {
+    ) {
         return $entity == 'products'
             ? app($this->entities[$entity])->create($count, strtolower($productType ?? 'all'))
             : app($this->entities[$entity])->create($count);

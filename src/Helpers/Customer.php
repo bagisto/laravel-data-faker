@@ -7,10 +7,10 @@ use Webkul\Customer\Models\Customer as CustomerModel;
 class Customer
 {
     /**
-     * Create a records
+     * Create a customers.
      *
-     * @param  integer  $count
-     * @return void
+     * @param  int  $count
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function create($count)
     {
