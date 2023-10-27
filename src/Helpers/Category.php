@@ -2,6 +2,7 @@
 
 namespace Webkul\Faker\Helpers;
 
+use Illuminate\Support\Facades\Event;
 use Webkul\Category\Models\Category as CategoryModel;
 
 class Category
@@ -27,6 +28,10 @@ class Category
      */
     public function factory()
     {
-        return CategoryModel::factory()->hasTranslations();
+        return CategoryModel::factory()
+            ->afterCreating(function ($category) {
+                Event::dispatch('catalog.category.create.after', $category);
+            })
+            ->hasTranslations();
     }
 }
