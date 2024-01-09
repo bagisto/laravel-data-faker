@@ -263,15 +263,6 @@ class Product
         return $this->factory()
             ->grouped()
             ->afterCreating(function ($product) {
-                ProductInventory::factory()
-                    ->for($product)
-                    ->state(function (array $attributes) {
-                        return [
-                            'inventory_source_id' => 1,
-                        ];
-                    })
-                    ->create();
-
                 $products = $this->getSimpleProductFactory()->count(4)->create();
 
                 $product->related_products()->sync($products->pluck('id'));
@@ -311,15 +302,6 @@ class Product
         return $this->factory()
             ->bundle()
             ->afterCreating(function ($product) {
-                ProductInventory::factory()
-                    ->for($product)
-                    ->state(function (array $attributes) {
-                        return [
-                            'inventory_source_id' => 1,
-                        ];
-                    })
-                    ->create();
-
                 $simpleProducts = $this->getSimpleProductFactory()->count(4)->create();
 
                 foreach ($simpleProducts as $simpleProduct) {
