@@ -135,11 +135,9 @@ class Faker extends Command
             '<comment>Categories</comment>',
             '<comment>Products: </comment>All',
             '<comment>Products: </comment>Simple',
-            '<comment>Products: </comment>Configurable',
             '<comment>Products: </comment>Virtual',
-            '<comment>Products: </comment>Grouped',
             '<comment>Products: </comment>Downloadable',
-            '<comment>Products: </comment>Bundle',
+            '<comment>Products: </comment>Configurable',
         ];
     }
 

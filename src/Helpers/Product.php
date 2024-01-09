@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Event;
 use Webkul\Category\Models\Category;
 use Webkul\Product\Models\Product as ProductModel;
 use Webkul\Product\Models\ProductAttributeValue;
+use Webkul\Product\Models\ProductBundleOption;
+use Webkul\Product\Models\ProductBundleOptionProduct;
 use Webkul\Product\Models\ProductDownloadableLink;
 use Webkul\Product\Models\ProductInventory;
 
@@ -128,32 +130,6 @@ class Product
                             ];
                         })
                         ->create();
-                } elseif ($product->type == 'bundle') {
-                    $products = $this->getSimpleProductFactory()->count(4)->create();
-
-                    $options = [];
-
-                    foreach ($products as $key => $simpleProduct) {
-                        $options['bundle_options']['option_' . $key] = [
-                            app()->getLocale() => [
-                                'label' => fake()->words(3, true),
-                            ],
-                            'type'        => fake()->randomElement(['select', 'radio', 'checkbox', 'multiselect']),
-                            'is_required' => '1',
-                            'sort_order'  => $key,
-                            'products'    => [
-                                'product_' . $key => [
-                                    'product_id' => $simpleProduct->id,
-                                    'sort_order' => $key,
-                                    'qty'        => rand(10, 100),
-                                ],
-                            ],
-                        ];
-                    }
-
-                    app(\Webkul\Product\Repositories\ProductBundleOptionRepository::class)->saveBundleOptions($options, $product);
-                }  elseif ($product->type == 'grouped') {
-                    $product->related_products()->sync($this->getSimpleProductFactory()->count(4)->create()->pluck('id'));
                 } elseif ($product->type == 'downloadable') {
                     ProductDownloadableLink::factory()
                         ->for($product)
@@ -344,29 +320,17 @@ class Product
                     })
                     ->create();
 
-                $products = $this->getSimpleProductFactory()->count(4)->create();
+                $simpleProducts = $this->getSimpleProductFactory()->count(4)->create();
 
-                $options = [];
-
-                foreach ($products as $key => $product) {
-                    $options['option_' . $key] = [
-                        'en' => [
-                            'label' => fake()->title(),
-                        ],
-                        'type'        => fake()->randomElement(['select', 'radio', 'checkbox', 'multiselect']),
-                        'is_required' => '1',
-                        'sort_order'  => $key,
-                        'products'    => [
-                            'product_' . $key => [
-                                'product_id' => $product->id,
-                                'sort_order' => $key,
-                                'qty'        => rand(10, 100),
-                            ],
-                        ],
-                    ];
+                foreach ($simpleProducts as $simpleProduct) {
+                    ProductBundleOptionProduct::factory()->create([
+                        'product_id'               => $simpleProduct->id,
+                        'product_bundle_option_id' => ProductBundleOption::factory()->create([
+                            'product_id' => $product->id,
+                            'label'      => fake()->word(),
+                        ])->id,
+                    ]);
                 }
-
-                app(\Webkul\Product\Repositories\ProductBundleOptionRepository::class)->saveBundleOptions($options, $product);
 
                 Event::dispatch('catalog.product.update.after', $product);
             });
