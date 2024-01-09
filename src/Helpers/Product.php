@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Event;
 use Webkul\Category\Models\Category;
 use Webkul\Product\Models\Product as ProductModel;
 use Webkul\Product\Models\ProductAttributeValue;
+use Webkul\Product\Models\ProductBundleOption;
+use Webkul\Product\Models\ProductBundleOptionProduct;
 use Webkul\Product\Models\ProductDownloadableLink;
 use Webkul\Product\Models\ProductInventory;
 
@@ -251,6 +253,25 @@ class Product
     }
 
     /**
+     * Get a grouped product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getGroupedProductFactory()
+    {
+        return $this->factory()
+            ->grouped()
+            ->afterCreating(function ($product) {
+                $products = $this->getSimpleProductFactory()->count(4)->create();
+
+                $product->related_products()->sync($products->pluck('id'));
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
      * Get a downloadable product factory. This will provide a factory instance for
      * attaching additional features and taking advantage of the factory.
      *
@@ -265,6 +286,33 @@ class Product
                     ->for($product)
                     ->hasTranslations()
                     ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
+     * Get a bundle product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getBundleProductFactory()
+    {
+        return $this->factory()
+            ->bundle()
+            ->afterCreating(function ($product) {
+                $simpleProducts = $this->getSimpleProductFactory()->count(4)->create();
+
+                foreach ($simpleProducts as $simpleProduct) {
+                    ProductBundleOptionProduct::factory()->create([
+                        'product_id'               => $simpleProduct->id,
+                        'product_bundle_option_id' => ProductBundleOption::factory()->create([
+                            'product_id' => $product->id,
+                            'label'      => fake()->word(),
+                        ])->id,
+                    ]);
+                }
 
                 Event::dispatch('catalog.product.update.after', $product);
             });
