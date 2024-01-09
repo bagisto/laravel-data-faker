@@ -23,10 +23,8 @@ class Product
     protected $types = [
         'simple',
         'virtual',
-        'grouped',
         'downloadable',
         'configurable',
-        'bundle',
     ];
 
     /**
@@ -274,7 +272,9 @@ class Product
                     })
                     ->create();
 
-                $product->related_products()->sync($this->getSimpleProductFactory()->count(4)->create()->pluck('id'));
+                $products = $this->getSimpleProductFactory()->count(4)->create();
+
+                $product->related_products()->sync($products->pluck('id'));
 
                 Event::dispatch('catalog.product.update.after', $product);
             });
