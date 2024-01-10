@@ -9,6 +9,7 @@ use Webkul\Category\Models\Category;
 use Webkul\Product\Models\Product as ProductModel;
 use Webkul\Product\Models\ProductAttributeValue;
 use Webkul\Product\Models\ProductDownloadableLink;
+use Webkul\Product\Models\ProductGroupedProduct;
 use Webkul\Product\Models\ProductInventory;
 
 class Product
@@ -245,6 +246,31 @@ class Product
                         ];
                     })
                     ->create();
+
+                Event::dispatch('catalog.product.update.after', $product);
+            });
+    }
+
+    /**
+     * Get a grouped product factory. This will provide a factory instance for
+     * attaching additional features and taking advantage of the factory.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    public function getGroupedProductFactory()
+    {
+        return $this->factory()
+            ->grouped()
+            ->afterCreating(function ($product) {
+                $simpleProducts = $this->getSimpleProductFactory()->count(4)->create();
+
+                foreach ($simpleProducts as $key => $simpleProduct) {
+                    ProductGroupedProduct::factory()->create([
+                        'product_id'            => $product->id,
+                        'associated_product_id' => $simpleProduct->id,
+                        'sort_order'            => $key, 
+                    ]);
+                }
 
                 Event::dispatch('catalog.product.update.after', $product);
             });
