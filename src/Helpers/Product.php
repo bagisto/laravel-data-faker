@@ -11,6 +11,7 @@ use Webkul\Product\Models\ProductAttributeValue;
 use Webkul\Product\Models\ProductBundleOption;
 use Webkul\Product\Models\ProductBundleOptionProduct;
 use Webkul\Product\Models\ProductDownloadableLink;
+use Webkul\Product\Models\ProductGroupedProduct;
 use Webkul\Product\Models\ProductInventory;
 
 class Product
@@ -263,9 +264,15 @@ class Product
         return $this->factory()
             ->grouped()
             ->afterCreating(function ($product) {
-                $products = $this->getSimpleProductFactory()->count(4)->create();
+                $simpleProducts = $this->getSimpleProductFactory()->count(4)->create();
 
-                $product->related_products()->sync($products->pluck('id'));
+                foreach ($simpleProducts as $key => $simpleProduct) {
+                    ProductGroupedProduct::factory()->create([
+                        'product_id'            => $product->id,
+                        'associated_product_id' => $simpleProduct->id,
+                        'sort_order'            => $key, 
+                    ]);
+                }
 
                 Event::dispatch('catalog.product.update.after', $product);
             });
