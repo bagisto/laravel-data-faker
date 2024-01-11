@@ -413,6 +413,13 @@ class Product
     public function getAttributeValue(string $code)
     {
         switch ($code) {
+            case isset($this->options['attribute_value'][$code]):
+                /**
+                 * This will give high priority of given attribute options.
+                 * Which is allows the addition of values to new attributes if the attributes key is present in the options property.
+                 */
+                return $this->options['attribute_value'][$code];
+                
             case 'sku':
                 return [
                     'text_value' => fake()->uuid(),
@@ -466,14 +473,6 @@ class Product
                 ];
 
             default:
-                /**
-                 * This allows the addition of values to new attributes if the attributes key
-                 * is present in the options property.
-                 */
-                if (isset($this->options['attribute_value'][$code])) {
-                    return $this->options['attribute_value'][$code];
-                }
-
                 return;
         }
     }
