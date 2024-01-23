@@ -36,13 +36,27 @@ class Product
         1  => 'sku',
         2  => 'name',
         3  => 'url_key',
+        5  => 'new', 
+        6  => 'featured',
         7  => 'visible_individually',
         8  => 'status',
         9  => 'short_description',
         10 => 'description',
         11 => 'price',
+        12 => 'cost',
         13 => 'special_price',
+        14 => 'special_price_from',
+        15 => 'special_price_to',
+        16 => 'meta_title',
+        17 => 'meta_keywords',
+        18 => 'meta_description',
+        19 => 'length',
+        20 => 'width',
+        21 => 'height',
         22 => 'weight',
+        26 => 'guest_checkout',
+        27 => 'product_number',
+        28 => 'manage_stock',
     ];
 
     /**
@@ -423,12 +437,20 @@ class Product
                     'text_value' => fake()->slug(),
                 ];
 
+            case 'guest_checkout':
+            case 'manage_stock':
+            case 'new': 
+            case 'featured': 
+            case 'visible_individually':
             case 'visible_individually':
             case 'status':
                 return [
                     'boolean_value' => true,
                 ];
 
+            case 'meta_title':
+            case 'meta_keywords':
+            case 'meta_description':
             case 'short_description':
                 return [
                     'text_value' => fake()->sentence(),
@@ -448,16 +470,27 @@ class Product
                     'float_value' => fake()->randomFloat(2, 1, 1000),
                 ];
 
+            case 'special_price_from':
+            case 'special_price_to':
+            case 'cost':
             case 'special_price':
                 return [
                     'float_value' => null,
                 ];
 
+            case 'height':
             case 'weight':
+            case 'width':
+            case 'length':
                 return [
                     'text_value' => fake()->numberBetween(0, 100),
                 ];
 
+            case 'product_number':
+                return [
+                    'text_value' => fake()->numerify('bagisto-#########'),
+                ];
+                
             default:
                 /**
                  * This allows the addition of values to new attributes if the attributes key
