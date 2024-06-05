@@ -2,7 +2,7 @@
 
 #### This changelog consists the bug & security fixes and new features being included in the releases listed below.
 
-## **v2.0.0-ALPHA1(14-Oct-2022)** - *Release*
+## **v2.0.0(05-June-2024)** - *Release*
 
 * [Feature] Now creates Simple, Virtual, Downloadable and Configurable products.
 
