@@ -230,6 +230,8 @@ class Product
         return $this->factory()
             ->simple()
             ->afterCreating(function ($product) {
+                $product->channels()->sync(1);
+
                 ProductInventory::factory()
                     ->for($product)
                     ->state(function (array $attributes) {
@@ -443,21 +445,30 @@ class Product
                 return [
                     'text_value' => fake()->words(3, true),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
             case 'url_key':
                 return [
                     'text_value' => fake()->slug(),
+                    'locale'     => $this->locale,
+                ];
+
+            case 'status':
+                return [
+                    'boolean_value' => true,
+                    'channel'       => $this->channel,
+                ];
+
+            case 'manage_stock':
+                return [
+                    'boolean_value' => true,
+                    'channel'    => $this->channel,
                 ];
 
             case 'guest_checkout':
-            case 'manage_stock':
             case 'new': 
             case 'featured': 
             case 'visible_individually':
-            case 'visible_individually':
-            case 'status':
                 return [
                     'boolean_value' => true,
                 ];
@@ -465,18 +476,16 @@ class Product
             case 'meta_title':
             case 'meta_keywords':
             case 'meta_description':
-            case 'short_description':
                 return [
                     'text_value' => fake()->sentence(),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
+            case 'short_description':
             case 'description':
                 return [
                     'text_value' => fake()->paragraph(),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
             case 'price':
@@ -486,6 +495,11 @@ class Product
 
             case 'special_price_from':
             case 'special_price_to':
+                return [
+                    'float_value' => null,
+                    'channel'     => $this->channel,
+                ];
+
             case 'cost':
             case 'special_price':
                 return [
