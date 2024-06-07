@@ -230,7 +230,7 @@ class Product
         return $this->factory()
             ->simple()
             ->afterCreating(function ($product) {
-                $product->channels()->sync(1);
+                $product->channels()->sync(core()->getCurrentChannel()->id);
 
                 ProductInventory::factory()
                     ->for($product)
