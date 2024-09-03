@@ -30,6 +30,4 @@ php artisan migrate
 ```sh
 php artisan bagisto:fake
 ```
--> Select suitable option to create records
-
-->That's all 
+-> Select suitable option to create records.
