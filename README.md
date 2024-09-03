@@ -11,7 +11,7 @@ This module allows you to generate fake data that can be populated into the data
 
 ## 2. Requirements:
 
-* **Bagisto**: > v2.0.0 && < v2.1.2
+* **Bagisto**: > v2.2.2
 
 ## 3. Installation:
 
@@ -30,6 +30,4 @@ php artisan migrate
 ```sh
 php artisan bagisto:fake
 ```
--> Select suitable option to create records
-
-->That's all 
+-> Select suitable option to create records.

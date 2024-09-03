@@ -17,14 +17,12 @@ class Faker implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param  string  $entity
-     * @param  int  $count
      * @param  string  $productType
      * @return void
      */
     public function __construct(
-        protected $entity,
-        protected $count,
+        protected string $entity,
+        protected int $count,
         protected $productType
     ) {
     }

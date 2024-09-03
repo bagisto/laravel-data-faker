@@ -9,10 +9,9 @@ class Customer
     /**
      * Create a customers.
      *
-     * @param  int  $count
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function create($count)
+    public function create(int $count)
     {
         return $this->factory()
             ->count($count)
