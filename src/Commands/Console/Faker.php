@@ -92,7 +92,7 @@ class Faker extends Command
     /**
      * Prompt for the limit to create records.
      *
-     * @param  string  $$entity
+     * @param  string  $entity
      * @return void
      */
     protected function promptForLimit($entity = null)
