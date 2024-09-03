@@ -11,9 +11,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Jitendra Singh",
-            "email": "jitendra@webkul.in",
-            "homepage": "https://bagisto.com"
+            "name": "Bagisto Data Faker",
+            "email": "support@bagisto.com"
         }
     ],
     "autoload": {
@@ -32,6 +31,5 @@
             "aliases": {}
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "minimum-stability": "dev"
 }
