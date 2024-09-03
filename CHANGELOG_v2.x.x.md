@@ -2,7 +2,7 @@
 
 #### This changelog consists the bug & security fixes and new features being included in the releases listed below.
 
-## **v2.2.0(03-September-2024)** - *Release*
+## **v2.1.0(03-September-2024)** - *Release*
 
 * [Enhancement] Refactored code base.
 
