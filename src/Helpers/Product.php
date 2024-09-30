@@ -473,9 +473,9 @@ class Product
                 ];
 
             /**
-             * This will not be null in any case. If you want you can pass the value in the options property.
+             * At this stage, this will be null. If you want you can pass the value in the options property.
              *
-             * To Do: Need to fix this.
+             * To Do: Need to fix the core pricing test issue first then address this issue.
              */
             case 'cost':
             case 'special_price':
