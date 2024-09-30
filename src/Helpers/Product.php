@@ -429,7 +429,6 @@ class Product
                 return [
                     'text_value' => fake()->words(3, true),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
             case 'url_key':
@@ -439,13 +438,18 @@ class Product
                 ];
 
             case 'guest_checkout':
-            case 'manage_stock':
             case 'new': 
             case 'featured': 
             case 'visible_individually':
+                return [
+                    'boolean_value' => true,
+                ];
+
+            case 'manage_stock':
             case 'status':
                 return [
                     'boolean_value' => true,
+                    'channel'       => $this->channel,
                 ];
 
             case 'meta_title':
@@ -455,33 +459,30 @@ class Product
                 return [
                     'text_value' => fake()->sentence(),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
             case 'description':
                 return [
                     'text_value' => fake()->paragraph(),
                     'locale'     => $this->locale,
-                    'channel'    => $this->channel,
                 ];
 
+            case 'cost':
             case 'price':
+            case 'special_price':
                 return [
-                    'locale'      => $this->locale,
-                    'channel'     => $this->channel,
                     'float_value' => fake()->randomFloat(2, 1, 1000),
                 ];
 
             case 'special_price_from':
             case 'special_price_to':
-            case 'cost':
-            case 'special_price':
                 return [
                     'float_value' => null,
+                    'channel'     => $this->channel,
                 ];
 
-            case 'height':
             case 'weight':
+            case 'height':
             case 'width':
             case 'length':
                 return [
