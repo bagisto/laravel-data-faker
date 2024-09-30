@@ -33,7 +33,7 @@ class Product
         1  => 'sku',
         2  => 'name',
         3  => 'url_key',
-        5  => 'new', 
+        5  => 'new',
         6  => 'featured',
         7  => 'visible_individually',
         8  => 'status',
@@ -271,7 +271,7 @@ class Product
                     ProductGroupedProduct::factory()->create([
                         'product_id'            => $product->id,
                         'associated_product_id' => $simpleProduct->id,
-                        'sort_order'            => $key, 
+                        'sort_order'            => $key,
                     ]);
                 }
 
@@ -419,7 +419,7 @@ class Product
                  * Which is allows the addition of values to new attributes if the attributes key is present in the options property.
                  */
                 return $this->options['attribute_value'][$code];
-                
+
             case 'sku':
                 return [
                     'text_value' => fake()->uuid(),
@@ -438,8 +438,8 @@ class Product
                 ];
 
             case 'guest_checkout':
-            case 'new': 
-            case 'featured': 
+            case 'new':
+            case 'featured':
             case 'visible_individually':
                 return [
                     'boolean_value' => true,
@@ -467,17 +467,26 @@ class Product
                     'locale'     => $this->locale,
                 ];
 
-            case 'cost':
             case 'price':
-            case 'special_price':
                 return [
                     'float_value' => fake()->randomFloat(2, 1, 1000),
+                ];
+
+            /**
+             * This will not be null in any case. If you want you can pass the value in the options property.
+             *
+             * To Do: Need to fix this.
+             */
+            case 'cost':
+            case 'special_price':
+                return [
+                    'float_value' => null,
                 ];
 
             case 'special_price_from':
             case 'special_price_to':
                 return [
-                    'float_value' => null,
+                    'date_value'  => null,
                     'channel'     => $this->channel,
                 ];
 
