@@ -2,9 +2,9 @@
 
 #### This changelog consists the bug & security fixes and new features being included in the releases listed below.
 
-## **v2.1.1 (30-September-2024)** - *Release*
+## **v2.2.0 (30-September-2024)** - *Release*
 
-* Fixed url key issue.
+* Compatibility with Bagisto v2.2.x.
 
 ## **v2.1.0 (03-September-2024)** - *Release*
 
