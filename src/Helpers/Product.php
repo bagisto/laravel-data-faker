@@ -435,6 +435,7 @@ class Product
             case 'url_key':
                 return [
                     'text_value' => fake()->slug(),
+                    'locale'     => $this->locale,
                 ];
 
             case 'guest_checkout':
