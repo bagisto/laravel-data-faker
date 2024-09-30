@@ -10,9 +10,10 @@ class Category
     /**
      * Create a categories.
      *
+     * @param  int  $count
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function create(int $count)
+    public function create($count)
     {
         return $this->factory()
             ->count($count)

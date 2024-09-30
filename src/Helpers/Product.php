@@ -18,8 +18,10 @@ class Product
 {
     /**
      * Contains product type faker classes.
+     *
+     * @var array
      */
-    protected array $types = [
+    protected $types = [
         'simple',
         'virtual',
         'downloadable',
@@ -28,46 +30,38 @@ class Product
 
     /**
      * Product default attributes.
+     *
+     * @var array
      */
-    protected array $attributes = [
+    protected $attributes = [
         1  => 'sku',
         2  => 'name',
         3  => 'url_key',
-        5  => 'new', 
-        6  => 'featured',
         7  => 'visible_individually',
         8  => 'status',
         9  => 'short_description',
         10 => 'description',
         11 => 'price',
-        12 => 'cost',
         13 => 'special_price',
-        14 => 'special_price_from',
-        15 => 'special_price_to',
-        16 => 'meta_title',
-        17 => 'meta_keywords',
-        18 => 'meta_description',
-        19 => 'length',
-        20 => 'width',
-        21 => 'height',
         22 => 'weight',
-        26 => 'guest_checkout',
-        27 => 'product_number',
-        28 => 'manage_stock',
     ];
 
     /**
      * Super attributes for configurable products.
+     *
+     * @var array
      */
-    protected array $superAttributes = [
+    protected $superAttributes = [
         23 => 'color',
         24 => 'size',
     ];
 
     /**
      * Super attribute options combination for configurable variants.
+     *
+     * @var array
      */
-    protected array $superAttributeOptionCombinations = [
+    protected $superAttributeOptionCombinations = [
         [1, 6],
         [1, 7],
         [2, 6],
@@ -76,13 +70,17 @@ class Product
 
     /**
      * Locale.
+     *
+     * @var string
      */
-    protected string $locale;
+    protected $locale;
 
     /**
      * Channel.
+     *
+     * @var string
      */
-    protected string $channel;
+    protected $channel;
 
     /**
      * Create a new helper instance.
@@ -96,6 +94,9 @@ class Product
         $this->channel = core()->getCurrentChannelCode();
 
         if (isset($this->options['attributes'])) {
+            /**
+             * Please avoid using array_merge() here; we need the same key to come from the options.
+             */
             $this->attributes = $this->attributes + $this->options['attributes'];
         }
     }
@@ -215,8 +216,6 @@ class Product
         return $this->factory()
             ->simple()
             ->afterCreating(function ($product) {
-                $product->channels()->sync(core()->getCurrentChannel()->id);
-
                 ProductInventory::factory()
                     ->for($product)
                     ->state(function (array $attributes) {
@@ -387,8 +386,11 @@ class Product
 
     /**
      * Creates attribute values for the product.
+     *
+     * @param  \Illuminate\Database\Eloquent\Factories\Sequence  $sequence
+     * @return mixed
      */
-    public function getAttributeValues(Sequence $sequence): mixed
+    public function getAttributeValues($sequence)
     {
         static $index = 0;
 
@@ -398,11 +400,9 @@ class Product
 
         $attributeCodes = array_values($this->attributes);
 
-        $result = array_merge($this->getAttributeValue($attributeCodes[$index]), [
+        return array_merge($this->getAttributeValue($attributeCodes[$index]), [
             'attribute_id' => array_search($attributeCodes[$index++], $this->attributes),
         ]);
-
-        return $result;
     }
 
     /**
@@ -435,22 +435,14 @@ class Product
             case 'url_key':
                 return [
                     'text_value' => fake()->slug(),
-                    'locale'     => $this->locale,
                 ];
 
-            case 'guest_checkout':
-            case 'manage_stock':
-            case 'new': 
-            case 'featured': 
             case 'visible_individually':
             case 'status':
                 return [
                     'boolean_value' => true,
                 ];
 
-            case 'meta_title':
-            case 'meta_keywords':
-            case 'meta_description':
             case 'short_description':
                 return [
                     'text_value' => fake()->sentence(),
@@ -467,30 +459,17 @@ class Product
 
             case 'price':
                 return [
-                    'locale'      => $this->locale,
-                    'channel'     => $this->channel,
                     'float_value' => fake()->randomFloat(2, 1, 1000),
                 ];
 
-            case 'special_price_from':
-            case 'special_price_to':
-            case 'cost':
             case 'special_price':
                 return [
                     'float_value' => null,
                 ];
 
-            case 'height':
             case 'weight':
-            case 'width':
-            case 'length':
                 return [
                     'text_value' => fake()->numberBetween(0, 100),
-                ];
-
-            case 'product_number':
-                return [
-                    'text_value' => fake()->numerify('bagisto-#########'),
                 ];
 
             default:
