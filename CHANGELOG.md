@@ -2,7 +2,7 @@
 
 #### This changelog consists the bug & security fixes and new features being included in the releases listed below.
 
-## Unreleased
+## **v2.3.0 (5th of August 2025)** - *Release*
 
 * Ensured compatibility with Bagisto v2.3.x.
 
