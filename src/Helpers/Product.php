@@ -170,6 +170,27 @@ class Product
                             'inventory_source_id' => 1,
                         ])
                         ->afterCreating(function ($variant) {
+                            $variant->channels()->sync([$this->channel->id]);
+
+                            $variant->load('attribute_values.attribute');
+
+                            foreach ($variant->attribute_values as $attributeValue) {
+                                $attribute = $attributeValue->attribute;
+
+                                if ($attribute->code === 'sku') {
+                                    $attributeValue->text_value = $variant->sku;
+                                }
+
+                                $attributeValue->unique_id = implode('|', array_filter([
+                                    $attribute->value_per_channel ? $attributeValue->channel : null,
+                                    $attribute->value_per_locale ? $attributeValue->locale : null,
+                                    $variant->id,
+                                    $attributeValue->attribute_id,
+                                ]));
+
+                                $attributeValue->save();
+                            }
+
                             static $index = 0;
 
                             $attributeIds = array_keys($this->superAttributes);
@@ -373,6 +394,27 @@ class Product
                         'inventory_source_id' => 1,
                     ])
                     ->afterCreating(function ($variant) {
+                        $variant->channels()->sync([$this->channel->id]);
+
+                        $variant->load('attribute_values.attribute');
+
+                        foreach ($variant->attribute_values as $attributeValue) {
+                            $attribute = $attributeValue->attribute;
+
+                            if ($attribute->code === 'sku') {
+                                $attributeValue->text_value = $variant->sku;
+                            }
+
+                            $attributeValue->unique_id = implode('|', array_filter([
+                                $attribute->value_per_channel ? $attributeValue->channel : null,
+                                $attribute->value_per_locale ? $attributeValue->locale : null,
+                                $variant->id,
+                                $attributeValue->attribute_id,
+                            ]));
+
+                            $attributeValue->save();
+                        }
+                        
                         static $index = 0;
 
                         $attributeIds = array_keys($this->superAttributes);
