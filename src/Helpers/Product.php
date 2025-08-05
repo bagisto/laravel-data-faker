@@ -2,17 +2,18 @@
 
 namespace Webkul\Faker\Helpers;
 
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Event;
 use Webkul\Category\Models\Category;
-use Webkul\Product\Models\Product as ProductModel;
-use Webkul\Product\Models\ProductAttributeValue;
-use Webkul\Product\Models\ProductBundleOption;
-use Webkul\Product\Models\ProductBundleOptionProduct;
-use Webkul\Product\Models\ProductDownloadableLink;
-use Webkul\Product\Models\ProductGroupedProduct;
+use Illuminate\Support\Facades\Event;
+use Webkul\Attribute\Models\Attribute;
 use Webkul\Product\Models\ProductInventory;
+use Webkul\Product\Models\ProductBundleOption;
+use Webkul\Product\Models\ProductAttributeValue;
+use Webkul\Product\Models\ProductGroupedProduct;
+use Webkul\Product\Models\Product as ProductModel;
+use Webkul\Product\Models\ProductDownloadableLink;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use Webkul\Product\Models\ProductBundleOptionProduct;
 
 class Product
 {
@@ -30,49 +31,44 @@ class Product
      * Product default attributes.
      */
     protected array $attributes = [
-        1  => 'sku',
-        2  => 'name',
-        3  => 'url_key',
-        5  => 'new',
-        6  => 'featured',
-        7  => 'visible_individually',
-        8  => 'status',
-        9  => 'short_description',
-        10 => 'description',
-        11 => 'price',
-        12 => 'cost',
-        13 => 'special_price',
-        14 => 'special_price_from',
-        15 => 'special_price_to',
-        16 => 'meta_title',
-        17 => 'meta_keywords',
-        18 => 'meta_description',
-        19 => 'length',
-        20 => 'width',
-        21 => 'height',
-        22 => 'weight',
-        26 => 'guest_checkout',
-        27 => 'product_number',
-        28 => 'manage_stock',
+        'sku',
+        'name',
+        'url_key',
+        'new',
+        'featured',
+        'visible_individually',
+        'status',
+        'short_description',
+        'description',
+        'price',
+        'cost',
+        'special_price',
+        'special_price_from',
+        'special_price_to',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
+        'length',
+        'width',
+        'height',
+        'weight',
+        'guest_checkout',
+        'product_number',
+        'manage_stock',
     ];
 
     /**
      * Super attributes for configurable products.
      */
     protected array $superAttributes = [
-        23 => 'color',
-        24 => 'size',
+        'color',
+        'size',
     ];
 
     /**
      * Super attribute options combination for configurable variants.
      */
-    protected array $superAttributeOptionCombinations = [
-        [1, 6],
-        [1, 7],
-        [2, 6],
-        [2, 7],
-    ];
+    protected array $superAttributeOptionCombinations = [];
 
     /**
      * Locale.
@@ -82,7 +78,7 @@ class Product
     /**
      * Channel.
      */
-    protected string $channel;
+    protected object $channel;
 
     /**
      * Create a new helper instance.
@@ -93,11 +89,13 @@ class Product
     {
         $this->locale = app()->getLocale();
 
-        $this->channel = core()->getCurrentChannelCode();
+        $this->channel = core()->getCurrentChannel();
 
         if (isset($this->options['attributes'])) {
             $this->attributes = $this->attributes + $this->options['attributes'];
         }
+
+        $this->loadAttributeIds();
     }
 
     /**
@@ -119,6 +117,27 @@ class Product
             ))
             ->hasAttached(Category::inRandomOrder()->limit(2)->get())
             ->afterCreating(function ($product) {
+                $product->channels()->sync([$this->channel->id]);
+
+                $product->load('attribute_values.attribute');
+
+                foreach ($product->attribute_values as $attributeValue) {
+                    $attribute = $attributeValue->attribute;
+
+                    if ($attribute->code === 'sku') {
+                        $attributeValue->text_value = $product->sku;
+                    }
+
+                    $attributeValue->unique_id = implode('|', array_filter([
+                        $attribute->value_per_channel ? $attributeValue->channel : null,
+                        $attribute->value_per_locale ? $attributeValue->locale : null,
+                        $product->id,
+                        $attributeValue->attribute_id,
+                    ]));
+
+                    $attributeValue->save();
+                }
+
                 if (in_array($product->type, ['simple', 'virtual'])) {
                     ProductInventory::factory()
                         ->for($product)
@@ -449,7 +468,7 @@ class Product
             case 'status':
                 return [
                     'boolean_value' => true,
-                    'channel'       => $this->channel,
+                    'channel'       => $this->channel->code,
                 ];
 
             case 'meta_title':
@@ -487,7 +506,7 @@ class Product
             case 'special_price_to':
                 return [
                     'date_value'  => null,
-                    'channel'     => $this->channel,
+                    'channel'     => $this->channel->code,
                 ];
 
             case 'weight':
@@ -506,5 +525,32 @@ class Product
             default:
                 return;
         }
+    }
+
+    /**
+     * Load attribute IDs based on the attribute codes.
+     *
+     * @return void
+     */
+    protected function loadAttributeIds(): void
+    {
+        $attributeCodes = array_merge($this->attributes, $this->superAttributes);
+        
+        $attributes = Attribute::with(['options'])->whereIn('code', $attributeCodes)->get(['id', 'code']);
+
+        $optionSets = $attributes->whereIn('code', $this->superAttributes)
+            ->map(function ($attribute) {
+                return $attribute->options->take(2)->pluck('id')->toArray();
+            })
+            ->values()
+            ->toArray();
+        
+        $this->attributes = $attributes->whereIn('code', $this->attributes)->pluck('code', 'id')->toArray();
+
+        $this->superAttributes = $attributes->whereIn('code', $this->superAttributes)->pluck('code', 'id')->toArray();
+
+        $this->superAttributeOptionCombinations = collect($optionSets[0])
+            ->crossJoin($optionSets[1])
+            ->toArray();
     }
 }
