@@ -3,15 +3,19 @@
 
 ## 1. Introduction:
 
-This module allows you to generate fake data that can be populated into the database during development for testing purposes.  
+This module allows you to generate fake data that can be populated into the database during development for testing purposes.
 
-* User can create customers
-* User can create categories
-* User can create products (Simple, Virtual, Downloadable and Configurable)
+Features:
+
+* Users can create customers.
+
+* Users can create categories.
+
+* Users can create products, including Simple, Virtual, Downloadable, and Configurable types.
 
 ## 2. Requirements:
 
-* **Bagisto**: v2.2.x
+* **Bagisto**: v2.3.x
 
 ## 3. Installation:
 
@@ -26,7 +30,9 @@ php artisan config:cache
 php artisan queue:batches-table
 php artisan migrate
 ```
+
 * You can start using the module by running the command below:
+
 ```sh
 php artisan bagisto:fake
 ```
